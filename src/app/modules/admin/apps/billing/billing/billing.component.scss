@@ -1,0 +1,86 @@
+/* === Alignement précis des boutons d’action === */
+.mat-mdc-cell.text-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 100% !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+/* Taille compacte et alignement harmonieux */
+.mat-mdc-stroked-button {
+  min-width: 70px !important;
+  height: 28px !important;
+  line-height: 26px !important;
+  padding: 0 6px !important;
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+
+  .mat-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+/* Spécifique aux boutons bleus et verts */
+.bg-sky-700 {
+  background-color: #0c4a6e !important;
+  border-color: #0ea5e9 !important;
+  color: #fff !important;
+}
+
+.bg-emerald-700 {
+  background-color: #047857 !important;
+  border-color: #10b981 !important;
+  color: #fff !important;
+}
+
+.bg-sky-700:hover {
+  background-color: #075985 !important;
+}
+
+.bg-emerald-700:hover {
+  background-color: #065f46 !important;
+}
+/* Modern, thin, and visible scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+  background-clip: content-box;
+}
+
+/* Dark mode */
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(209, 213, 219, 0.6);
+}

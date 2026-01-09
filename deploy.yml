@@ -1,0 +1,195 @@
+---
+- name: Deploy Angular Application with Loki Logging and Monitoring
+  hosts: web
+  become: yes
+  vars:
+    app_name: angular-nginx-app
+    app_tar_src: angular-nginx-app.tar
+    app_tar_dest: /tmp/angular-nginx-app.tar
+    loki_url: http://172.17.5.190:3100/loki/api/v1/push
+    loki_labels: job=frontservice
+    cadvisor_name: cadvisor
+    node_exporter_name: node-exporter
+    app_network: app-network
+
+  tasks:
+    # Step 1: Ensure Docker is installed and running
+    - name: Check if Docker is installed
+      command: docker --version
+      register: docker_installed
+      ignore_errors: yes
+
+    - name: Install Docker prerequisites
+      yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+      when: docker_installed.rc != 0
+
+    - name: Add Docker repository
+      shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      when: docker_installed.rc != 0
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+      when: docker_installed.rc != 0
+
+    - name: Start and enable Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+      when: docker_installed.rc != 0
+
+    # Step 2: Create Docker network (if not exists)
+    - name: Check if Docker network exists
+      shell: docker network ls --filter name={{ app_network }} -q
+      register: app_network_exists
+      changed_when: false
+
+    - name: Create Docker network if not exists
+      shell: docker network create {{ app_network }}
+      when: app_network_exists.stdout == ""
+
+    # Step 3: Install Loki Docker Plugin
+    - name: Check if Loki plugin is installed
+      shell: docker plugin ls | grep loki
+      register: loki_plugin_installed
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Install Loki plugin
+      shell: |
+        docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+      when: loki_plugin_installed.stdout == ""
+
+    # Step 4: Configure Docker daemon.json for Loki with labels
+    - name: Check if Docker daemon.json is configured for Loki
+      stat:
+        path: /etc/docker/daemon.json
+      register: daemon_json_exists
+
+    - name: Configure Docker daemon.json for Loki with labels
+      copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "log-driver": "loki",
+            "log-opts": {
+              "loki-url": "{{ loki_url }}",
+              "loki-external-labels": "{{ loki_labels }}"
+            }
+          }
+        mode: "0644"
+      notify:
+        - Restart Docker
+      when: not daemon_json_exists.stat.exists
+
+    # Step 5: Deploy Application Container
+    - name: Check if application container exists
+      shell: docker ps -a --filter "name={{ app_name }}" -q
+      register: app_container_exists
+      changed_when: false
+
+    - name: Stop and remove old application container if exists
+      shell: |
+        docker ps -a --filter "name={{ app_name }}" --format "{{ '{{.ID}}' }}" | xargs --no-run-if-empty docker stop
+        docker ps -a --filter "name={{ app_name }}" --format "{{ '{{.ID}}' }}" | xargs --no-run-if-empty docker rm
+      when: app_container_exists.stdout != ""
+
+    - name: Remove old Docker image
+      shell: |
+        docker images -q {{ app_name }} | xargs --no-run-if-empty docker rmi -f
+      ignore_errors: yes
+
+    - name: Copy new Docker image to VM
+      copy:
+        src: "{{ app_tar_src }}"
+        dest: "{{ app_tar_dest }}"
+
+    - name: Load new Docker image
+      shell: docker load < "{{ app_tar_dest }}"
+
+    - name: Run application container
+      shell: |
+        docker run -d --name {{ app_name }} \
+        --network {{ app_network }} \
+        --publish 8443:8443 \
+        --log-driver=loki \
+        --restart unless-stopped \
+        --log-opt loki-url={{ loki_url }} \
+        --log-opt loki-external-labels="{{ loki_labels }}" \
+        {{ app_name }}:latest
+
+    # Step 6: Deploy Node Exporter
+    - name: Check if Node Exporter container exists
+      shell: docker ps -a --filter "name={{ node_exporter_name }}" -q
+      register: node_exporter_exists
+      changed_when: false
+
+    - name: Stop and remove existing Node Exporter container if it exists
+      shell: |
+        docker ps -a --filter "name={{ node_exporter_name }}" --format "{{ '{{.ID}}' }}" | xargs --no-run-if-empty docker stop
+        docker ps -a --filter "name={{ node_exporter_name }}" --format "{{ '{{.ID}}' }}" | xargs --no-run-if-empty docker rm
+      when: node_exporter_exists.stdout != ""
+
+    - name: Deploy Node Exporter
+      shell: |
+        docker run -d --name {{ node_exporter_name }} \
+        --network {{ app_network }} \
+        --publish 9100:9100 \
+        --volume=/proc:/host/proc:ro \
+        --volume=/sys:/host/sys:ro \
+        --volume=/:/rootfs:ro \
+        --volume=/dev/disk:/dev/disk:ro \
+        --restart unless-stopped \
+        quay.io/prometheus/node-exporter:latest \
+        --path.procfs=/host/proc \
+        --path.sysfs=/host/sys \
+        --path.rootfs=/rootfs \
+        --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)" \
+        --collector.filesystem.ignored-fs-types="^(sysfs|procfs|autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fuse.*|hugetlbfs|mqueue|overlay|tmpfs)$$" \
+        --collector.diskstats \
+        --collector.loadavg \
+        --collector.meminfo \
+        --collector.time \
+        --collector.uname \
+        --collector.stat
+
+    # Step 7: Deploy cAdvisor
+    - name: Check if cAdvisor container exists
+      shell: docker ps -a --filter "name={{ cadvisor_name }}" -q
+      register: cadvisor_exists
+      changed_when: false
+
+    - name: Stop and remove existing cAdvisor container if it exists
+      shell: |
+        docker ps -a --filter "name={{ cadvisor_name }}" --format "{{ '{{.ID}}' }}" | xargs --no-run-if-empty docker stop
+        docker ps -a --filter "name={{ cadvisor_name }}" --format "{{ '{{.ID}}' }}" | xargs --no-run-if-empty docker rm
+      when: cadvisor_exists.stdout != ""
+
+    - name: Deploy cAdvisor
+      shell: |
+        docker run -d --name {{ cadvisor_name }} \
+        --network {{ app_network }} \
+        --publish 8182:8080 \
+        --volume=/:/rootfs:ro \
+        --volume=/var/run:/var/run:ro \
+        --volume=/sys:/sys:ro \
+        --volume=/var/lib/docker/:/var/lib/docker:ro \
+        --volume=/dev/disk:/dev/disk:ro \
+        --restart unless-stopped \
+        gcr.io/cadvisor/cadvisor:latest \
+        --docker_only=false \
+        --store_container_labels=true \
+        --enable_metrics="cpu,memory,disk,network"
+
+  handlers:
+    - name: Restart Docker
+      service:
+        name: docker
+        state: restarted

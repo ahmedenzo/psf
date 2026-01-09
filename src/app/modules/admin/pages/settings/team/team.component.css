@@ -1,0 +1,39 @@
+/* Styles for the active button */
+.active-button {
+    background-color: green; /* Green background for active */
+    color: white;            /* White text color */
+    border: none;           /* Remove border */
+    border-radius: 4px;    /* Optional: round the corners */
+    padding: 8px;          /* Optional: add padding */
+}
+
+/* Styles for the inactive button */
+.inactive-button {
+    background-color: red;  /* Red background for inactive */
+    color: white;           /* White text color */
+    border: none;           /* Remove border */
+    border-radius: 4px;    /* Optional: round the corners */
+    padding: 8px;          /* Optional: add padding */
+}
+
+/* Optional: Add hover effects */
+.active-button:hover {
+    background-color: darkgreen; /* Darker green on hover */
+}
+
+.inactive-button:hover {
+    background-color: darkred;   /* Darker red on hover */
+}
+.avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e0e7ff; /* Indigo-100 */
+  color: #4f46e5;       /* Indigo-600 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}

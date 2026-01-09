@@ -1,0 +1,279 @@
+<div class="flex flex-col flex-auto min-w-0 p-4 sm:p-6 bg-gray-50 relative">
+
+  <!-- 🌀 Loader Overlay -->
+  <div
+    *ngIf="loading"
+    class="absolute inset-0 flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm z-50 transition-all duration-300"
+  >
+    <div class="flex flex-col items-center animate-pulse">
+      <mat-icon class="animate-spin text-indigo-500 text-6xl mb-4">autorenew</mat-icon>
+      <p class="text-indigo-700 font-medium text-lg tracking-wide">
+        Loading cards, please wait...
+      </p>
+    </div>
+  </div>
+
+  <!-- 💳 Header -->
+<div class="bg-gradient-to-r from-indigo-500 to-blue-400 text-white rounded-2xl shadow-lg mb-6 overflow-hidden">
+    <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-10 py-8">
+        <div class="flex items-center justify-between">
+            <div class="text-3xl font-bold flex items-center gap-3">
+                <span class="tracking-tight">Card Management</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🔵 Search Description under Header -->
+<div
+    class="w-full max-w-screen-xl mx-auto mb-6 px-6 sm:px-10 py-5
+           bg-white/80 dark:bg-gray-900/60 backdrop-blur-xl
+           border border-gray-200 dark:border-gray-700
+           rounded-2xl shadow-sm flex items-start gap-4 animate-fade-in">
+
+    <!-- Icon -->
+    <mat-icon class="text-indigo-600 dark:text-indigo-400 text-4xl mt-1">info</mat-icon>
+
+    <!-- Text -->
+    <div class="flex flex-col">
+        <p class="text-gray-900 dark:text-gray-200 text-lg font-semibold mb-1">
+            How Filtering Works
+        </p>
+
+        <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+            You can search cardholder records using <span class="font-semibold text-indigo-600 dark:text-indigo-400">any one</span> of the following criteria:
+        </p>
+
+        <ul class="mt-3 space-y-1 text-sm text-gray-700 dark:text-gray-300">
+            <li class="flex items-center gap-2">
+                <mat-icon class="text-indigo-500 text-base">credit_card</mat-icon>
+                <span><strong>Card Number</strong> — must start with 4 or 5 (16 digits).</span>
+            </li>
+
+            <li class="flex items-center gap-2">
+                <mat-icon class="text-indigo-500 text-base">badge</mat-icon>
+                <span><strong>CIN / Passport</strong> — minimum of 6 characters.</span>
+            </li>
+
+            <li class="flex items-center gap-2">
+                <mat-icon class="text-indigo-500 text-base">call</mat-icon>
+                <span><strong>Phone Number</strong> — digits only, between 11 and 13 numbers.</span>
+            </li>
+        </ul>
+
+        <p class="mt-4 text-xs text-gray-500 dark:text-gray-400 italic">
+            Enter one field and click <span class="font-semibold text-indigo-600 dark:text-indigo-400">Search</span> to display results.
+        </p>
+    </div>
+</div>
+
+<style>
+    .animate-fade-in {
+        animation: fadeInDesc .35s ease-out;
+    }
+    @keyframes fadeInDesc {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+
+  <!-- 🧭 Filters + Table Section -->
+  <div
+    class="flex flex-col w-full max-w-screen-xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100"
+  >
+
+    <!-- 🔍 Filters Bar -->
+    <div class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-6 shadow-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 items-end">
+
+        <!-- 💳 Card Number -->
+        <mat-form-field appearance="outline" class="w-full">
+  <mat-label>Card Number</mat-label>
+  <mat-icon matPrefix class="text-indigo-400">credit_card</mat-icon>
+  <input
+    matInput
+    [(ngModel)]="filters.cardNumber"
+    name="cardNumber"
+    placeholder="Starts with 4 or 5 (16 digits)"
+    minlength="16"
+    maxlength="16"
+    pattern="^[4-5][0-9]{15}$"
+    #cardInput="ngModel"
+    
+  />
+
+  <!-- 🔴 Inline validation messages -->
+
+  <mat-error *ngIf="cardInput.hasError('pattern') && cardInput.touched">
+    Must start with 4 or 5 and contain exactly 16 digits
+  </mat-error>
+</mat-form-field>
+
+
+        <!-- 🪪 CIN / Passport -->
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>CIN / Passport</mat-label>
+          <mat-icon matPrefix class="text-indigo-400">badge</mat-icon>
+          <input matInput [(ngModel)]="filters.cinPassport" placeholder="Enter CIN or Passport" />
+        </mat-form-field>
+
+        <!-- 📱 Phone -->
+<!-- 📱 Phone Number -->
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>Phone Number</mat-label>
+  <mat-icon matPrefix class="text-indigo-400">phone</mat-icon>
+
+  <input
+    matInput
+    [(ngModel)]="filters.phoneNumber"
+    name="phoneNumber"
+    placeholder="Enter phone number"
+    minlength="11"
+    maxlength="13"
+    pattern="^[0-9]*$"
+    #phoneInput="ngModel"
+  />
+
+  <!-- 🔵 Dynamic hints -->
+  <mat-hint *ngIf="phoneLength < 11">
+    {{ 11 - phoneLength }} digit(s) remaining
+  </mat-hint>
+
+  <mat-hint *ngIf="phoneLength >= 11 && phoneLength <= 13" class="text-green-600">
+    OK ({{ phoneLength }} digits)
+  </mat-hint>
+
+  <!-- ❌ Errors -->
+  <mat-error *ngIf="phoneInput.hasError('pattern') && phoneInput.touched">
+    Digits only
+  </mat-error>
+
+  <mat-error *ngIf="phoneInput.hasError('minlength') && phoneInput.touched">
+    Minimum 11 digits required
+  </mat-error>
+
+  <mat-error *ngIf="phoneInput.hasError('maxlength') && phoneInput.touched">
+    Maximum 13 digits allowed
+  </mat-error>
+</mat-form-field>
+
+
+        <!-- 🔘 Buttons -->
+        <div class="flex justify-end gap-3">
+          <button
+            mat-flat-button
+            color="primary"
+            class="h-12 px-6 rounded-xl font-semibold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-transform duration-150"
+            (click)="applyFilters()"
+            [disabled]="loading"
+          >
+            <mat-icon class="mr-1">search</mat-icon> Search
+          </button>
+
+          <button
+            mat-stroked-button
+            color="warn"
+            class="h-12 px-6 rounded-xl font-semibold hover:shadow-md hover:-translate-y-0.5 transition-transform duration-150"
+            (click)="clearFilters()"
+            [disabled]="loading"
+          >
+            <mat-icon class="mr-1">clear_all</mat-icon> Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- 📊 Info Bar -->
+      <div class="mt-6 flex justify-between items-center text-sm text-gray-600">
+        <div class="flex items-center gap-2" *ngIf="searchTriggered">
+          <mat-icon class="text-indigo-500 text-base">list_alt</mat-icon>
+          <span class="font-medium">Total: {{ totalItems }} records</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔸 INITIAL MESSAGE -->
+    <div
+      *ngIf="!searchTriggered && !loading"
+      class="flex flex-col items-center justify-center py-24 text-gray-500 bg-white"
+    >
+      <mat-icon class="text-6xl mb-4 text-gray-300">search</mat-icon>
+      <p class="text-lg font-medium">Please make a search to display cards</p>
+    </div>
+
+    <!-- ❌ NO RESULT MESSAGE -->
+    <div
+      *ngIf="searchTriggered && !loading && dataSource.data.length === 0"
+      class="p-16 text-center text-gray-500"
+    >
+      <mat-icon class="text-6xl mb-4 text-gray-300">credit_card_off</mat-icon>
+      <p class="text-lg font-medium">No cards found for the entered filters</p>
+    </div>
+
+    <!-- 📋 Data Table -->
+    <div *ngIf="searchTriggered && totalItems > 0 && !loading" class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full text-sm border-t border-gray-100">
+        <ng-container matColumnDef="bankName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-50 font-semibold text-left">BANK</th>
+          <td mat-cell *matCellDef="let item">{{ item.bankName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cardHolderName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-50 font-semibold text-left">HOLDER</th>
+          <td mat-cell *matCellDef="let item">{{ item.cardHolderName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="cardNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-50 font-semibold text-left">CARD NUMBER</th>
+          <td mat-cell *matCellDef="let item" class="font-mono text-green-900">
+            {{ item.cardNumber.slice(0, 4) }} **** **** {{ item.cardNumber.slice(-4) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="identification">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-50 font-semibold text-left">CIN/PASSPORT</th>
+          <td mat-cell *matCellDef="let item">{{ item.identification }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-blue-50 font-semibold text-left">PHONE</th>
+          <td mat-cell *matCellDef="let item">{{ item.phoneNumber }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-semibold text-left">ACTIONS</th>
+          <td mat-cell *matCellDef="let item" class="text-center relative">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="editItem(item)"
+              matTooltip="Edit card details"
+              class="hover:scale-110 transition-transform duration-150"
+            >
+              <mat-icon class="text-gray-700">credit_card</mat-icon>
+              <mat-icon class="text-green-600 absolute top-0 right-0 text-[14px]">mode_edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns;"
+          class="hover:bg-blue-50 transition-colors even:bg-gray-50"
+        ></tr>
+      </table>
+    </div>
+
+    <!-- 📑 Pagination -->
+    <mat-paginator
+      *ngIf="searchTriggered && totalItems > 0"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      showFirstLastButtons
+      class="bg-blue-50 border-t border-gray-200 rounded-b-2xl"
+      [pageSize]="pageSize"
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>

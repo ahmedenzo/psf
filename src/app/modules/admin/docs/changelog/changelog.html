@@ -1,0 +1,266 @@
+<div class="flex flex-col flex-auto min-h-screen bg-gray-100">
+  <!-- Header -->
+  <header class="w-full bg-gradient-to-r from-indigo-500 to-blue-300 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-xl font-bold tracking-wide">Pin Sender Section</h1>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-md">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M2.25 6A2.25 2.25 0 014.5 3.75h15a2.25 2.25 0 012.25 2.25v1.5H2.25V6zM21.75 9v9a2.25 2.25 0 01-2.25 2.25H4.5A2.25 2.25 0 012.25 18V9h19.5zM6 15.75a.75.75 0 000 1.5h1.5a.75.75 0 000-1.5H6zm3.75 0a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-4.5z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="flex flex-col items-center p-6 sm:p-8 lg:p-12">
+    <div class="w-full max-w-4xl space-y-6">
+
+      <!-- ÉTAT 1 : avant envoi de l’OTP -->
+      <ng-container *ngIf="!otpSent; else otpSection">
+        <!-- Alerts initiales -->
+        <div class="w-full max-w-2xl space-y-4 mx-auto">
+          <ng-container *ngIf="!successMessage1 && !errorMessage && !errorMessage2; else messageAlert">
+            <div class="p-5 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm text-indigo-800 animate-fade-in">
+              ℹ️ Enter your card number, national ID, and phone number.<br />
+              Select whether you want to request an <strong>Initial PIN</strong> or a <strong>PIN Reminder</strong>.<br />
+              Then click <strong>"Verify"</strong> to receive a one-time password (OTP) on phone.
+            </div>
+          </ng-container>
+          <ng-template #messageAlert>
+            <div *ngIf="errorMessage" class="p-5 bg-red-50 border border-red-200 rounded-xl shadow-sm text-red-800 animate-fade-in">
+              ⚠️ <span class="font-semibold">Warning</span><br />{{ errorMessage }}
+            </div>
+            <div *ngIf="errorMessage2" class="p-5 bg-red-50 border border-red-200 rounded-xl shadow-sm text-red-800 animate-fade-in">
+              ⚠️ <span class="font-semibold">Warning</span><br />{{ errorMessage2 }}
+            </div>
+            <div *ngIf="successMessage1" class="p-5 bg-green-50 border border-green-200 rounded-xl shadow-sm text-green-800 animate-fade-in">
+              ✅ <span class="font-semibold">Success</span><br />{{ successMessage1 }}
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Formulaire carte -->
+        <div class="flex justify-center">
+          <!-- 🔒 autocomplete="off" sur tout le form + noms de champs neutres -->
+          <form [formGroup]="firstFormGroup"
+                (ngSubmit)="verifyCardholder()"
+                autocomplete="off"
+                class="w-full max-w-2xl p-8 bg-white rounded-xl shadow-lg border-2 border-blue-200 transition-all duration-300 hover:shadow-xl">
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div class="sm:col-span-2">
+                <mat-form-field class="w-full">
+                  <mat-label class="text-gray-700">Card Number</mat-label>
+                  <img *ngIf="cardType === 'visa'" matPrefix src="assets/images/logo/visa-svgrepo-com.svg" alt="Visa Logo" class="h-6 w-10 mr-2">
+                  <img *ngIf="cardType === 'mastercard'" matPrefix src="assets/images/logo/mastercard-svgrepo-com.svg" alt="Mastercard Logo" class="h-6 w-10 mr-2">
+                  <mat-icon matPrefix *ngIf="!cardType" class="text-gray-500">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  </mat-icon>
+                  <!-- 🔒 Champs protégés : autocomplete off + name/id neutre -->
+                  <input matInput
+                         formControlName="cardNumber"
+                         autocomplete="off"
+                         name="secure-card-field"
+                         id="secure-card-field"
+                         placeholder="Enter your 16-digit card number"
+                         appCardNumberFormat
+                         class="text-gray-800">
+                  <mat-error *ngIf="firstFormGroup.controls.cardNumber.hasError('required')">Card Number is required</mat-error>
+                  <mat-error *ngIf="firstFormGroup.controls.cardNumber.hasError('pattern')">Card Number must be 16 digits and valid</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div>
+                <mat-form-field class="w-full">
+                  <mat-label class="text-gray-700">Expiration</mat-label>
+                  <input matInput
+                         formControlName="finalDate"
+                         autocomplete="off"
+                         name="secure-expiry-field"
+                         id="secure-expiry-field"
+                         placeholder="MM/YY"
+                         maxlength="5"
+                         (input)="formatExpiration($event)"
+                         class="text-gray-800">
+                  <mat-error *ngIf="firstFormGroup.controls.finalDate.hasError('required')">Expiration date is required</mat-error>
+                  <mat-error *ngIf="firstFormGroup.controls.finalDate.hasError('invalidMonth')">Month must be between 01 and 12</mat-error>
+                  <mat-error *ngIf="firstFormGroup.controls.finalDate.hasError('invalidYear')">Year must be valid</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <mat-form-field class="w-full">
+                <mat-label class="text-gray-700">CIN/Passport</mat-label>
+                <mat-icon matPrefix class="text-indigo-600">
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </mat-icon>
+                <input matInput
+                       formControlName="nationalId"
+                       autocomplete="off"
+                       name="id-document-field"
+                       id="id-document-field"
+                       placeholder="Enter your CIN or Passport number"
+                       class="text-gray-800">
+                <mat-error *ngIf="firstFormGroup.controls.nationalId.hasError('required')">This field is required</mat-error>
+                <mat-error *ngIf="firstFormGroup.controls.nationalId.hasError('pattern')">Must be either an 8-digit CIN or a 6-12 character Passport number</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="mt-6">
+              <mat-form-field class="w-full">
+                <mat-label class="text-gray-700">Phone Number</mat-label>
+                <mat-icon matPrefix class="text-gray-500">phone</mat-icon>
+                <div class="flex items-center">
+                  <mat-select [(ngModel)]="selectedCountryCode"
+                              class="w-36 mr-3 bg-gray-50"
+                              formControlName="countryCode"
+                              (selectionChange)="closeSelect()">
+                    <mat-option *ngFor="let country of countryCodes" [value]="country.code" class="text-gray-800">
+                      {{ country.name }} ({{ country.code }})
+                    </mat-option>
+                  </mat-select>
+                  <input matInput
+                         formControlName="gsm"
+                         autocomplete="off"
+                         name="phone-field"
+                         id="phone-field"
+                         placeholder="Enter phone number"
+                         class="flex-1 text-gray-800"
+                         (click)="$event.stopPropagation()">
+                </div>
+                <mat-error *ngIf="firstFormGroup.controls.gsm.hasError('required')">Phone Number is required</mat-error>
+                <mat-error *ngIf="firstFormGroup.controls.gsm.hasError('pattern')">Phone Number must be only digits</mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Operation Type Toggle -->
+            <div class="mt-2 flex justify-center">
+              <mat-button-toggle-group formControlName="operationType" appearance="standard" class="toggle-switch tiny">
+                <mat-button-toggle value="INITIAL_PIN" class="toggle-option tiny">
+                  🔐 Initial PIN
+                </mat-button-toggle>
+                <mat-button-toggle value="PIN_REMINDER" class="toggle-option tiny">
+                  🔁 PIN Reminder
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+
+            <div class="flex justify-center mt-8">
+              <button type="submit"
+                      [disabled]="!firstFormGroup.valid"
+                      [ngClass]="{
+                        'bg-blue-600 hover:bg-blue-700 text-white': firstFormGroup.valid,
+                        'bg-gray-200 text-gray-400 cursor-not-allowed': !firstFormGroup.valid
+                      }"
+                      class="px-6 py-2 text-sm font-semibold rounded-md transition duration-200 shadow-sm focus:outline-none flex items-center gap-2">
+                ✅ Verify
+              </button>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+ 
+
+      <!-- ÉTAT 2 : après envoi de l’OTP -->
+      <ng-template #otpSection>
+        <!-- Zone d’instructions / alertes OTP (hauteur fixe) -->
+<div class="flex justify-center mb-4">
+  <div class="w-full max-w-lg h-36 overflow-y-auto space-y-3 animate-fade-in">
+        <ng-container *ngIf="!errorMessage1 && !successMessage && !successMessage2; else otpMessageAlert">
+ <div class="p-3 bg-indigo-50 border-l-4 border-indigo-400 rounded-md shadow-sm text-indigo-800 text-sm flex items-start gap-2 animate-fade-in">
+  <span class="text-indigo-500 text-base">📨</span>
+  <div>
+    <span class="font-medium">Verification Info:</span><br />
+    Enter the code received by SMS. After verification, the PIN will be sent to phone
+  </div>
+</div>
+
+<div class="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded-md shadow-sm text-yellow-800 text-sm flex items-start gap-2 animate-fade-in mt-2">
+  <span class="text-yellow-500 text-base">⏳</span>
+  <div>
+    <span class="font-medium">Time Limit:</span><br />
+    2 attempts, 90 seconds each. You can resend the code if needed.
+  </div>
+</div>
+
+</ng-container>
+
+            <ng-template #otpMessageAlert>
+              <div *ngIf="successMessage" class="p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm shadow-sm animate-fade-in">
+                ✅ <span class="font-semibold">Success:</span> {{ successMessage }}
+              </div>
+              <div *ngIf="successMessage2" class="p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm shadow-sm animate-fade-in">
+                ✅ <span class="font-semibold">Success:</span> {{ successMessage2 }}
+              </div>
+              <div *ngIf="errorMessage1" class="p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm shadow-sm animate-fade-in">
+                ⚠️ <span class="font-semibold">Warning:</span> {{ errorMessage1 }}
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- Formulaire de vérification OTP -->
+        <div class="flex justify-center">
+          <form [formGroup]="otpFormGroup" (ngSubmit)="verifyOtp()"
+                class="w-full max-w-lg p-6 bg-white rounded-2xl shadow-md border border-blue-200">
+            <!-- En‑tête et timer -->
+            <div class="flex justify-between items-center mb-6">
+              <button type="button" class="text-gray-400 text-xl font-bold">&times;</button>
+              <div class="text-sm bg-blue-100 text-blue-700 rounded-full px-3 py-1">
+                ⏳ {{countdown}}s left
+              </div>
+            </div>
+            <!-- Champs OTP -->
+            <h2 class="text-xl font-bold text-center mb-2">Verify Your Code</h2>
+            <p class="text-sm text-gray-600 text-center mb-6">Enter the 6-digit code sent to</p>
+            <div class="flex justify-center gap-2 mb-6">
+              <ng-container *ngFor="let otpField of ['otp1','otp2','otp3','otp4','otp5','otp6']">
+                <input type="text" maxlength="1"
+                       class="w-12 h-12 text-center text-lg font-medium border border-blue-200 bg-blue-50 text-blue-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                       [formControlName]="otpField" appOtpInput [disabled]="countend">
+              </ng-container>
+            </div>
+            <!-- Bouton Verify -->
+            <div class="flex justify-center mt-6">
+              <button type="submit"
+                      [disabled]="!otpFormGroup.valid || countend || otpVerified"
+                      [ngClass]="{
+                        'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white hover:brightness-110': otpFormGroup.valid && !countend && !otpVerified,
+                        'bg-gray-200 text-gray-400 cursor-not-allowed': !otpFormGroup.valid || countend || otpVerified
+                      }"
+                      class="px-6 py-2 text-sm font-semibold rounded-lg transition duration-300 shadow-md focus:outline-none">
+                ✅ Verify OTP
+              </button>
+            </div>
+            <!-- Resend Code -->
+            <div class="flex justify-center mt-4">
+              <button type="button" class="no-bg" (click)="resendOtp()" *ngIf="!hasResentOnce">
+                🔄 Resend Code
+              </button>
+            </div>
+          </form>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+  <!-- Custom Animation Styles -->
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</div>

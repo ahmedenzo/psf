@@ -1,0 +1,164 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+    <div class="flex md:w-full md:max-w-5xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+        <div class="w-full sm:w-auto py-8 px-4 sm:p-12 md:p-16 bg-white rounded-xl shadow-md">
+    <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+
+        <!-- Logo -->
+        <div class="logo-container flex justify-center items-center mb-6">
+            <div class="w-23">
+                <img src="assets/images/logo/monetique-tunisie-logo.png" alt="Logo" class="object-contain" />
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="text-center text-2xl font-bold tracking-tight text-gray-800">Sign in</div>
+
+        <!-- Alert -->
+        <fuse-alert
+            class="mt-6 -mb-4"
+            *ngIf="showAlert"
+            [appearance]="'outline'"
+            [showIcon]="false"
+            [type]="alert.type"
+            [@shake]="alert.type === 'error'">
+            {{ alert.message }}
+        </fuse-alert>
+
+        <!-- Sign in form -->
+        <form class="mt-8" [formGroup]="signInForm" #signInNgForm="ngForm">
+
+            <!-- Username -->
+            <mat-form-field appearance="outline" class="w-full mb-4">
+                <mat-label>Username</mat-label>
+                <input
+                    id="username"
+                    matInput
+                    [formControlName]="'username'">
+                <mat-error *ngIf="signInForm.get('username')?.hasError('required')">
+                    Username is required
+                </mat-error>
+                <mat-error *ngIf="signInForm.get('username')?.hasError('Username')">
+                    Please enter a valid Username
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Password -->
+            <mat-form-field appearance="outline" class="w-full mb-4">
+                <mat-label>Password</mat-label>
+                <input
+                    id="password"
+                    matInput
+                    type="password"
+                    [formControlName]="'password'"
+                    #passwordField>
+                <button
+                    mat-icon-button
+                    type="button"
+                    (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                    matSuffix>
+                    <mat-icon
+                        class="icon-size-5"
+                        *ngIf="passwordField.type === 'password'"
+                        [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                    <mat-icon
+                        class="icon-size-5"
+                        *ngIf="passwordField.type === 'text'"
+                        [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                </button>
+                <mat-error *ngIf="signInForm.get('password')?.hasError('required')">
+                    Password is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Submit button -->
+            <button
+                class="fuse-mat-button-large w-full mt-4 transition-all duration-200"
+                mat-flat-button
+                [style.backgroundColor]="(signInForm.disabled || signInForm.invalid) ? '#e5e7eb' : '#2563eb'"
+                [style.color]="'white'"
+                [disabled]="signInForm.disabled || signInForm.invalid"
+                (click)="signIn()">
+                <span *ngIf="!signInForm.disabled">
+                    Sign in
+                </span>
+                <mat-progress-spinner
+                    *ngIf="signInForm.disabled"
+                    [diameter]="18"
+                    [mode]="'indeterminate'">
+                </mat-progress-spinner>
+            </button>
+
+        </form>
+    </div>
+</div>
+
+
+<div class="relative hidden md:flex flex-auto items-center justify-center h-full p-8 lg:p-16 bg-gradient-to-br from-gray-900 to-blue-800 overflow-hidden text-white">
+    <!-- Background SVG Decorations -->
+    <svg class="absolute inset-0 pointer-events-none opacity-10" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+        <g fill="none" stroke="currentColor" stroke-width="80" class="text-gray-700">
+            <circle r="234" cx="196" cy="23"></circle>
+            <circle r="234" cx="790" cy="491"></circle>
+        </g>
+    </svg>
+
+    <svg class="absolute -top-12 -right-12 text-gray-700 opacity-10" viewBox="0 0 220 192" fill="none">
+        <defs>
+            <pattern id="pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
+            </pattern>
+        </defs>
+        <rect width="220" height="192" fill="url(#pattern)"></rect>
+    </svg>
+
+    <!-- Content -->
+    <div class="z-10 text-center max-w-2xl space-y-6 animate-fade-in">
+        <h1 class="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight">
+            Secure PIN Delivery Platform
+        </h1>
+        <p class="text-base lg:text-lg text-gray-300">
+            Developed by <strong class="text-white">Monétique Tunisie</strong>, our robust and intelligent platform enables banks and financial institutions to deliver PIN codes securely via SMS. Designed with industry-grade encryption and operational agility, it helps protect sensitive customer information while ensuring reliability, speed, and compliance.
+        </p>
+
+    
+
+        <!-- SVG Icon Features -->
+        <div class="flex justify-center flex-wrap gap-8 pt-6">
+            <!-- Credit Card -->
+            <div class="flex flex-col items-center hover:scale-105 transition-transform duration-200">
+                <svg class="w-14 h-14 text-blue-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M2.25 6.75a2.25 2.25 0 012.25-2.25h15a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25H4.5A2.25 2.25 0 012.25 17.25V6.75z" />
+                    <path d="M2.25 9h19.5" />
+                </svg>
+                <span class="mt-2 text-sm text-gray-300">Card Verification</span>
+            </div>
+
+            <!-- PIN -->
+            <div class="flex flex-col items-center hover:scale-105 transition-transform duration-200">
+                <svg class="w-14 h-14 text-green-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M16.5 10.5v-1.125a4.125 4.125 0 00-8.25 0V10.5" />
+                    <path d="M5.25 10.5h13.5V17.25a1.5 1.5 0 01-1.5 1.5H6.75a1.5 1.5 0 01-1.5-1.5V10.5z" />
+                </svg>
+                <span class="mt-2 text-sm text-gray-300">PIN Generation</span>
+            </div>
+
+            <!-- SMS -->
+            <div class="flex flex-col items-center hover:scale-105 transition-transform duration-200">
+                <svg class="w-14 h-14 text-yellow-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75" />
+                    <path d="M3.75 6.75L12 12l8.25-5.25" />
+                </svg>
+                <span class="mt-2 text-sm text-gray-300">Secure SMS Delivery</span>
+            </div>
+
+            <!-- Agent -->
+       
+        </div>
+    </div>
+</div>
+
+
+
+
+    </div>
+</div>

@@ -1,0 +1,245 @@
+<style>
+/* Fade-in animation for smooth appearance */
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Base progress bar */
+.progress-bar {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.3s ease-in-out, background 0.5s ease-in-out, box-shadow 0.6s ease-in-out;
+}
+
+/* Upload state - blue gradient */
+.progress-bar.upload {
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    background-size: 200% 200%;
+    animation: movingGradient 2s linear infinite;
+}
+
+/* Processing state - purple/pink gradient */
+.progress-bar.processing {
+    background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    background-size: 200% 200%;
+    animation: movingGradient 2s linear infinite;
+}
+
+/* Completed state - green pulse */
+.progress-bar.completed {
+    background: #10b981;
+    animation: pulseSuccess 1.2s ease-out infinite;
+}
+
+/* Gradient animation */
+@keyframes movingGradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Pulse animation for success */
+@keyframes pulseSuccess {
+    0%   { box-shadow: 0 0 0px rgba(16, 185, 129, 0.5); }
+    70%  { box-shadow: 0 0 15px rgba(16, 185, 129, 0.9); }
+    100% { box-shadow: 0 0 0px rgba(16, 185, 129, 0.5); }
+}
+</style>
+
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+
+    <mat-drawer-container class="flex-auto h-full" (backdropClick)="onBackdropClicked()">
+        
+        <!-- DRAWER -->
+        <mat-drawer class="w-full sm:w-96 bg-gray-100 dark:bg-gray-800 shadow-lg transition-all duration-300"
+                    [mode]="drawerMode"
+                    [opened]="false"
+                    position="end"
+                    [disableClose]="true"
+                    #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <!-- MAIN CONTENT -->
+        <mat-drawer-content class="flex flex-col">
+
+            <!-- HEADER -->
+            <div class="flex flex-col sm:flex-row items-center justify-between p-6 sm:p-8 bg-white dark:bg-gray-900 shadow-md rounded-b-lg border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-4">
+                    <div class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                        File Manager
+                    </div>
+                    <div class="flex items-center px-3 py-1 bg-indigo-100 dark:bg-indigo-900 rounded-full text-sm font-medium text-indigo-700 dark:text-indigo-200">
+                        {{ dataSource.data.length }} files
+                    </div>
+                </div>
+
+                <div class="mt-4 sm:mt-0">
+                    <input type="file" (change)="onFileSelected($event)" class="hidden" #fileInput>
+
+                    <button mat-flat-button 
+                            color="primary"
+                            class="flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                            (click)="fileInput.click()">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus'" class="mr-2"></mat-icon>
+                        Upload File
+                    </button>
+                </div>
+            </div>
+
+            <!-- SMART UPLOAD + LIVE PROCESSING -->
+            <div *ngIf="isUploading || currentProcessingReportId" class="w-full px-6 mt-6 animate-fade-in">
+
+                <div class="relative pt-1">
+
+                    <!-- Status / Percentage -->
+                    <div class="flex mb-2 items-center justify-between">
+                        <div class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            {{ uploadStatus }}
+                        </div>
+                        <div class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                            {{ uploadProgress }}%
+                        </div>
+                    </div>
+
+                    <!-- Gradient Progress Bar -->
+           <div class="overflow-hidden h-3 mb-4 rounded bg-gray-200 dark:bg-gray-700">
+    <div 
+        [style.width]="uploadProgress + '%'"
+        [ngClass]="{
+            'progress-bar': true,
+            'upload': isUploading,
+            'processing': currentProcessingReportId && !isUploading,
+            'completed': !isUploading && uploadProgress === 100
+        }"
+        class="flex flex-col text-center whitespace-nowrap text-white justify-center">
+    </div>
+</div>
+
+
+                    <!-- Live Processing Counters -->
+                    <div *ngIf="currentProcessingReport$ | async as report" class="flex justify-between text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
+                        <div class="flex items-center space-x-1">
+                            <mat-icon class="text-indigo-600">add_circle</mat-icon>
+                            <span>Created: {{ report.created }}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <mat-icon class="text-purple-600">update</mat-icon>
+                            <span>Updated: {{ report.updated }}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <mat-icon class="text-red-600">error</mat-icon>
+                            <span>Errors: {{ report.errors }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ALERTS -->
+            <div class="px-6 mt-6">
+                <fuse-alert *ngIf="successMessage" type="success" appearance="soft" class="rounded-lg shadow-md">
+                    <span fuseAlertTitle class="font-medium">Success</span> {{ successMessage }}
+                </fuse-alert>
+
+                <fuse-alert *ngIf="errorMessage" type="error" appearance="soft" class="rounded-lg shadow-md mt-4">
+                    <span fuseAlertTitle class="font-medium">Error</span> {{ errorMessage }}
+                </fuse-alert>
+            </div>
+
+            <!-- TABLE -->
+            <div class="flex justify-center mt-8 mb-12 px-4 sm:px-6">
+                <div class="w-full max-w-7xl">
+
+                    <mat-table [dataSource]="dataSource" matSort
+                        class="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+
+                        <!-- File Name -->
+                        <ng-container matColumnDef="fileName">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="py-3 px-4 font-semibold">
+                                File Name
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let report" class="py-3 px-4 border-b">
+                                {{ report.fileName }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- Load Date -->
+                        <ng-container matColumnDef="loadDate">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="py-3 px-4 font-semibold">
+                                Load Date
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let report" class="py-3 px-4 border-b">
+                                {{ report.loadDate | date:'short' }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- Created Count -->
+                        <ng-container matColumnDef="createdCount">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="py-3 px-4 font-semibold">
+                                Cards Created
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let report" class="py-3 px-4 border-b">
+                                {{ report.createdCount }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- Updated Count -->
+                        <ng-container matColumnDef="updatedCount">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header class="py-3 px-4 font-semibold">
+                                Cards Updated
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let report" class="py-3 px-4 border-b">
+                                {{ report.updatedCount }}
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- Status -->
+                        <ng-container matColumnDef="status">
+                            <mat-header-cell *matHeaderCellDef class="py-3 px-4 font-semibold">
+                                Status
+                            </mat-header-cell>
+
+                            <mat-cell *matCellDef="let report" class="py-3 px-4 border-b">
+
+                                <!-- No errors -->
+                                <a *ngIf="!report.errorDetails?.length"
+                                   [routerLink]="['./details/', report.id]"
+                                   class="text-indigo-600 hover:underline flex items-center">
+                                    <mat-icon color="primary" class="mr-1">check_circle</mat-icon>
+                                    Completed
+                                </a>
+
+                                <!-- Has errors -->
+                                <a *ngIf="report.errorDetails?.length"
+                                   [routerLink]="['./details/', report.id]"
+                                   class="text-red-600 hover:underline flex items-center">
+                                    <mat-icon color="warn" class="mr-1">warning</mat-icon>
+                                    View Errors ({{ report.errorDetails.length }})
+                                </a>
+
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50 dark:bg-gray-700"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"></mat-row>
+
+                    </mat-table>
+
+                    <!-- PAGINATION -->
+                    <mat-paginator 
+                        [pageSizeOptions]="[10, 20, 50, 100]" 
+                        showFirstLastButtons
+                        class="bg-white dark:bg-gray-800 mt-4 rounded-lg shadow-md p-4">
+                    </mat-paginator>
+
+                </div>
+            </div>
+
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

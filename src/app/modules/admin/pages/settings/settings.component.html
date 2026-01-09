@@ -1,0 +1,185 @@
+
+<div class="flex flex-col w-full min-w-0 overflow-y-auto max-h-screen">
+    <!-- Horizontal Menu -->
+    <div class="flex flex-row justify-center bg-gradient-to-r from-blue-800 via-indigo-700 to-purple-700 text-white shadow-md backdrop-blur-sm">
+        <ng-container *ngFor="let panel of panels; trackBy: trackByFn">
+            <div *ngIf="panel?.title && panel?.description" 
+                 class="flex items-center px-4 py-3 cursor-pointer transition-all duration-200"
+                 [ngClass]="{
+                     'hover:bg-blue-900/50': !selectedPanel || selectedPanel !== panel.id,
+                     'bg-indigo-800/70': selectedPanel && selectedPanel === panel.id
+                 }"
+                 (click)="goToPanel(panel.id)">
+                <mat-icon
+                    [ngClass]="{
+                        'text-gray-200': !selectedPanel || selectedPanel !== panel.id,
+                        'text-white': selectedPanel && selectedPanel === panel.id
+                    }"
+                    class="icon-size-4"
+                    [svgIcon]="panel.icon"></mat-icon>
+                <div class="ml-3 text-center flex-1">
+                    <div
+                        class="font-semibold text-base leading-6 tracking-wide"
+                        [ngClass]="{
+                            'text-gray-300': !selectedPanel || selectedPanel !== panel.id,
+                            'text-white': selectedPanel && selectedPanel === panel.id
+                        }">
+                        {{panel.title}}
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-auto px-6 pt-8 pb-12 md:p-8 lg:p-10 bg-gradient-to-br from-gray-100 to-white">
+        <!-- Panel Header with Animation -->
+        <div class="flex items-center justify-center gap-2 mb-6">
+            <mat-icon class="icon-size-5 text-indigo-600 animate-pulse" [svgIcon]="getPanelInfo(selectedPanel)?.icon || 'heroicons_solid:cog'"></mat-icon>
+            <div class="text-3xl font-bold text-gray-900 tracking-wide leading-tight animate-fade-in-up">
+                {{getPanelInfo(selectedPanel)?.title || 'Settings'}}
+            </div>
+        </div>
+
+        <!-- Load Settings Panel -->
+        <div class="mt-6">
+            <ng-container [ngSwitch]="selectedPanel">
+                <!-- Account -->
+                <ng-container *ngSwitchCase="'account'">
+                    <settings-account></settings-account>
+                </ng-container>
+                <!-- Security -->
+                <ng-container *ngSwitchCase="'security'">
+                    <settings-security></settings-security>
+                </ng-container>
+                <ng-container *ngSwitchCase="'securityadmin'">
+                    <app-security-admin></app-security-admin>
+                </ng-container>
+                <ng-container *ngSwitchCase="'agency'">
+                    <app-settings-account-admin></app-settings-account-admin>
+                </ng-container>
+                <!-- Plan & Billing -->
+                <ng-container *ngSwitchCase="'plan-billing'">
+                    <settings-plan-billing></settings-plan-billing>
+                </ng-container>
+                <ng-container *ngSwitchCase="'adminteam'">
+                    <app-team-admin></app-team-admin>
+                </ng-container>
+                <!-- Notifications -->
+                <ng-container *ngSwitchCase="'notifications'">
+                    <settings-notifications></settings-notifications>
+                </ng-container>
+                <!-- Team -->
+                <ng-container *ngSwitchCase="'team'">
+                    <settings-team></settings-team>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+    <style>
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .justify-center {
+            justify-content: center;
+        }
+        .bg-gradient-to-r {
+            background: linear-gradient(to right, #2a4365, #4c51bf, #6b46c1);
+        }
+        .bg-gradient-to-br {
+            background: linear-gradient(to bottom right, #f7fafc, #ffffff);
+        }
+        .shadow-md {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .backdrop-blur-sm {
+            backdrop-filter: blur(4px);
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        .hover\:bg-blue-900\/50:hover {
+            background-color: #1e3a8a80;
+        }
+        .bg-indigo-800\/70 {
+            background-color: #4c51bf80;
+        }
+        .text-gray-200 {
+            color: #e5e7eb;
+        }
+        .text-gray-300 {
+            color: #d1d5db;
+        }
+        .text-white {
+            color: #ffffff;
+        }
+        .text-gray-900 {
+            color: #1a202c;
+        }
+        .font-semibold {
+            font-weight: 600;
+        }
+        .text-base {
+            font-size: 1rem;
+        }
+        .text-3xl {
+            font-size: 1.875rem;
+        }
+        .leading-6 {
+            line-height: 1.5rem;
+        }
+        .leading-tight {
+            line-height: 1.2;
+        }
+        .tracking-wide {
+            letter-spacing: 0.025em;
+        }
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+        .flex-1 {
+            flex: 1;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 640px) {
+            .flex-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .px-4 {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            .py-3 {
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .text-base {
+                font-size: 0.875rem;
+            }
+            .text-3xl {
+                font-size: 1.5rem;
+            }
+        }
+    </style>

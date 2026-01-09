@@ -1,0 +1,98 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 bg-gray-50">
+  <div class="w-full sm:w-auto py-10 px-6 sm:p-12 sm:rounded-3xl sm:shadow-xl sm:bg-white max-w-md">
+<!-- Logo sécurité -->
+<!-- Bloc moderne sécurité -->
+<div class="bg-white border-l-4 border-blue-900 rounded-none sm:rounded-lg shadow-sm p-6 max-w-2xl mx-auto">
+
+  <!-- Icône minimaliste -->
+  <div class="flex items-center mb-4">
+    <svg class="w-8 h-8 text-blue-900 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+         viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+    </svg>
+    <span class="text-sm font-semibold text-blue-900 tracking-wide">SECURE AREA</span>
+  </div>
+
+  <!-- Titre -->
+  <h1 class="text-2xl font-semibold text-gray-900">
+    Change your password
+  </h1>
+
+  <!-- Sous-titre -->
+  <p class="mt-1 text-sm text-gray-600">
+    For your security, please enter your current password and choose a new one.
+  </p>
+</div>
+
+    <!-- Alert -->
+    <fuse-alert
+      class="mt-6"
+      *ngIf="showAlert"
+      [appearance]="'outline'"
+      [showIcon]="false"
+      [type]="alert.type"
+      [@shake]="alert.type === 'error'">
+      {{ alert.message }}
+    </fuse-alert>
+
+    <!-- Form -->
+    <form
+      class="mt-6 space-y-5"
+      [formGroup]="unlockSessionForm"
+      #unlockSessionNgForm="ngForm">
+
+      <!-- Username (readonly) -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" readonly class="text-gray-500">
+      </mat-form-field>
+
+      <!-- Current password -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Current password</mat-label>
+        <input matInput type="password" formControlName="currentPassword">
+        <mat-error *ngIf="unlockSessionForm.get('currentPassword')?.hasError('required')">
+          Current password is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- New password -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>New password</mat-label>
+        <input matInput type="password" formControlName="password">
+        <mat-error *ngIf="unlockSessionForm.get('password')?.hasError('passwordComplexity')">
+          Password must be at least 8 characters and include uppercase, lowercase, number and special character
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Confirm password -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Confirm password</mat-label>
+        <input matInput type="password" formControlName="passwordConfirm">
+        <mat-error *ngIf="unlockSessionForm.hasError('mustMatch')">
+          Passwords do not match
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Submit -->
+      <button
+        class="w-full mt-4 py-3 px-4 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        mat-flat-button
+        color="primary"
+        [disabled]="unlockSessionForm.disabled"
+        (click)="changePassword()">
+
+        <span *ngIf="!unlockSessionForm.disabled">Save new password</span>
+
+        <mat-progress-spinner
+          *ngIf="unlockSessionForm.disabled"
+          diameter="24"
+          mode="indeterminate">
+        </mat-progress-spinner>
+      </button>
+
+    </form>
+  </div>
+  
+</div>

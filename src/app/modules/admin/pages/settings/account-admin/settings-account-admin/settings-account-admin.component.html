@@ -1,0 +1,382 @@
+<div class="relative flex flex-col min-w-0 overflow-y-auto bg-gray-50 p-4 rounded-lg shadow-sm h-[70vh]">
+    <!-- Alerts Section -->
+    <div class="w-full max-w-4xl space-y-3 mb-4">
+        <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessage }}
+        </fuse-alert>
+        <fuse-alert *ngIf="errorMessage" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ errorMessage }}
+        </fuse-alert>
+        <fuse-alert *ngIf="successMessageu" [type]="'info'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-blue-600" [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessageu }}
+        </fuse-alert>
+        <fuse-alert *ngIf="errorMessageu" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ errorMessageu }}
+        </fuse-alert>
+    </div>
+
+    <!-- Agency Form -->
+    <form #accountFormRef [formGroup]="accountForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+        <div class="w-full mb-3">
+            <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <mat-icon class="icon-size-4 text-indigo-500" [svgIcon]="'heroicons_outline:building-storefront'"></mat-icon>
+                Create Agency
+            </div>
+            <div class="text-gray-500 text-sm mt-1">Create Agency with Required Information</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Agency Name</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                    <input [formControlName]="'name'" matInput placeholder="Agency name" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('name')?.hasError('required') && accountForm.get('name')?.touched" class="text-sm">
+                        Name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Agency Code</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:hashtag'"></mat-icon>
+                    <input [formControlName]="'agencyCode'" matInput placeholder="Agency code" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('agencyCode')?.hasError('required') && accountForm.get('agencyCode')?.touched" class="text-sm">
+                        Agency Code is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Contact Email</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:envelope'"></mat-icon>
+                    <input [formControlName]="'contactEmail'" matInput type="email" placeholder="Contact email" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('contactEmail')?.hasError('required') && accountForm.get('contactEmail')?.touched" class="text-sm">
+                        Contact Email is required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('contactEmail')?.hasError('email') && accountForm.get('contactEmail')?.touched" class="text-sm">
+                        Invalid email
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Contact Phone Number</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                    <input [formControlName]="'contactPhoneNumber'" matInput placeholder="Phone number" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('contactPhoneNumber')?.hasError('required') && accountForm.get('contactPhoneNumber')?.touched" class="text-sm">
+                        Contact Phone Number is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Address</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:home'"></mat-icon>
+                    <input [formControlName]="'adresse'" matInput placeholder="Address" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('adresse')?.hasError('required') && accountForm.get('adresse')?.touched" class="text-sm">
+                        Address is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Region</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:map'"></mat-icon>
+                    <mat-select [formControlName]="'region'" class="text-sm">
+                        <mat-option *ngFor="let region of regions" [value]="region">{{ region }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="accountForm.get('region')?.hasError('required') && accountForm.get('region')?.touched" class="text-sm">
+                        Region is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">City</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
+                    <mat-select [formControlName]="'city'" class="text-sm">
+                        <mat-option *ngFor="let city of availableCities" [value]="city">{{ city }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="accountForm.get('city')?.hasError('required') && accountForm.get('city')?.touched" class="text-sm">
+                        City is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="flex items-center justify-end mt-4 space-x-3">
+            <button
+                mat-stroked-button
+                type="button"
+                class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+                (click)="onCancel()">
+                Cancel
+            </button>
+            <button
+                mat-flat-button
+                type="button"
+                class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+                [disabled]="accountForm.invalid"
+                (click)="isEditMode ? onUpdate() : onSaveagence()">
+                {{ isEditMode ? 'Update Agency' : 'Create Agency' }}
+            </button>
+        </div>
+    </form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Agent Form -->
+    <form [formGroup]="adminForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+        <div class="w-full max-w-2xl mb-3">
+            <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <mat-icon class="icon-size-5 text-indigo-600" [svgIcon]="'heroicons_solid:user-group'"></mat-icon>
+                Agent Management
+            </div>
+            <div class="text-gray-500 text-sm mt-1">Create a new agent or upload multiple agents.</div>
+        </div>
+        <div class="w-full max-w-2xl">
+            <fuse-alert *ngIf="successMessageadmin" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+                <span fuseAlertTitle class="flex items-center gap-1">
+                    <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                    Success
+                </span>
+                {{ successMessageadmin }}
+            </fuse-alert>
+            <fuse-alert *ngIf="errorMessageadmin" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+                <span fuseAlertTitle class="flex items-center gap-1">
+                    <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                    Warning
+                </span>
+                {{ errorMessageadmin }}
+            </fuse-alert>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Username</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                    <input [formControlName]="'username'" matInput placeholder="Username" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('username')?.hasError('required') && accountForm.get('username')?.touched" class="text-sm">
+                        Username is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Password</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:key'"></mat-icon>
+                    <input 
+                        [type]="showPassword ? 'text' : 'password'" 
+                        [formControlName]="'password'" 
+                        matInput 
+                        placeholder="Password" 
+                        class="text-sm"
+                        (focus)="showPasswordHint = true"
+                        (blur)="showPasswordHint = false">
+                    <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" matTooltip="Toggle visibility">
+                        <mat-icon class="text-indigo-500 icon-size-4">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                    <button mat-icon-button matSuffix (click)="generatePassword()" matTooltip="Generate password">
+                        <mat-icon class="text-indigo-500 icon-size-4">refresh</mat-icon>
+                    </button>
+                    <mat-error *ngIf="accountForm.get('password')?.errors?.passwordComplexity && showPasswordHint" class="text-sm">
+                        8+ chars, mixed case, numbers, special chars
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Email</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:envelope'"></mat-icon>
+                    <input [formControlName]="'email'" matInput type="email" placeholder="Email" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('email')?.hasError('email') && accountForm.get('email')?.touched" class="text-sm">
+                        Invalid email
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Phone Number</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+                    <input [formControlName]="'phoneNumber'" matInput placeholder="Phone" class="text-sm">
+                </mat-form-field>
+            </div>
+            <!-- Batch Upload Section -->
+            <div class="flex flex-col items-start space-y-2">
+                <label for="batch-upload" class="text-sm font-semibold text-gray-700">Batch Upload Agents</label>
+                <input
+                    id="batch-upload"
+                    type="file"
+                    (change)="onFileChange($event)"
+                    class="hidden"
+                />
+                <label
+                    for="batch-upload"
+                    class="relative group cursor-pointer w-24 h-24 rounded-full border-2 border-dashed border-gray-300 hover:border-indigo-500 transition duration-300 shadow-sm hover:shadow-md overflow-hidden flex items-center justify-center bg-white"
+                >
+                    <div class="flex flex-col items-center justify-center text-indigo-400 group-hover:text-indigo-600 transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 12v8m0-8l-3 3m3-3l3 3m0-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v4" />
+                        </svg>
+                        <span class="text-xs font-medium">Upload File</span>
+                    </div>
+                </label>
+                <button
+                    mat-flat-button
+                    type="button"
+                    class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm mt-2"
+                    [disabled]="!selectedFile"
+                    (click)="batchUploadAgents()">
+                    Upload Batch
+                </button>
+            </div>
+        </div>
+        <div class="flex items-center justify-end mt-4 space-x-3">
+            <button
+                mat-stroked-button
+                type="button"
+                class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+                (click)="onCanceladmin()">
+                Cancel
+            </button>
+            <button
+                mat-flat-button
+                type="button"
+                class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+                [disabled]="adminForm.invalid"
+                (click)="registeragent()">
+                Save Agent
+            </button>
+        </div>
+    </form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Associate Agent Form -->
+<form [formGroup]="AssoagentForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+    <div class="w-full max-w-2xl mb-3">
+        <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <mat-icon class="icon-size-5 text-indigo-600" [svgIcon]="'heroicons_solid:link'"></mat-icon>
+            Associate Agent to Agency
+        </div>
+        <div class="text-gray-500 text-sm mt-1">Link agent to agency.</div>
+    </div>
+    <div class="w-full max-w-2xl">
+        <fuse-alert *ngIf="successMessagea" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessagea }}
+        </fuse-alert>
+        <fuse-alert *ngIf="errorMessagea" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ errorMessagea }}
+        </fuse-alert>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+        <div>
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                <mat-label class="text-gray-700 text-sm">Select Agent</mat-label>
+                <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                <mat-select [formControlName]="'userId'" class="text-sm">
+                    <ngx-mat-select-search 
+                        [formControl]="agentFilterCtrl"
+                        placeholderLabel="Search for an agent..."
+                        noEntriesFoundLabel="No results found">
+                    </ngx-mat-select-search>
+                    <mat-option *ngFor="let admin of filteredAgents" [value]="admin.id">
+                        {{ admin.username }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                <mat-label class="text-gray-700 text-sm">Select Agency</mat-label>
+                <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_outline:building-storefront'"></mat-icon>
+                <mat-select [formControlName]="'agencyId'" class="text-sm">
+                    <ngx-mat-select-search 
+                        [formControl]="agencyFilterCtrl"
+                        placeholderLabel="Search for an agency..."
+                        noEntriesFoundLabel="No results found">
+                    </ngx-mat-select-search>
+                    <mat-option *ngFor="let agence of filteredAgencies" [value]="agence.id">
+                        {{ agence.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="flex items-center justify-end mt-4 space-x-3">
+        <button
+            mat-stroked-button
+            type="button"
+            class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+            (click)="onCancelass()">
+            Cancel
+        </button>
+        <button
+            mat-flat-button
+            type="button"
+            class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+            [disabled]="AssoagentForm.invalid"
+            (click)="associateagent()">
+            Associate
+        </button>
+    </div>
+</form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Agencies List (Card Grid) -->
+<!-- Agencies List (Card Grid) -->
+<div class="w-full">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <mat-icon class="icon-size-4 text-indigo-500" [svgIcon]="'heroicons_outline:building-storefront'"></mat-icon>
+        Agencies
+    </h3>
+
+    <div class="grid grid-cols-6 gap-4">
+        <div *ngFor="let item of Agency" class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300 hover:scale-[1.05] p-3 group text-center">
+            <div class="flex flex-col items-center">
+                <!-- Creative initials badge -->
+                <div class="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-lg font-bold shadow-md mb-2">
+                    {{ getInitials(item.name) }}
+                </div>
+
+                <!-- Agency Name -->
+                <h4 class="text-sm font-semibold text-gray-900 capitalize tracking-wide truncate max-w-full">
+                    {{ item.name }}
+                </h4>
+
+                <!-- Agency Code -->
+                <p class="text-xs text-gray-500 mt-1 truncate max-w-full">
+                    Code: <span class="font-medium text-indigo-600">{{ item.agencyCode }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+

@@ -1,0 +1,322 @@
+/* Adjust the form container to align to the left */
+.ng-container-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  height: auto;
+  padding-top: 2; /* Remove extra padding */
+}
+
+.flex-autoo {
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: auto;
+  padding-top: 2; /* Remove padding */
+}
+
+/* Adjust the container that holds the form */
+.form-style {
+  margin-left: 0;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 10px; /* Reduced padding */
+  max-width: 700px;
+  width: 100%;
+}
+
+/* Adjust the form input fields for a modern look */
+
+/* Reduce the vertical space between header and form */
+h2 {
+  margin-bottom: 8px; /* Tighter margin */
+}
+
+/* Modern button styling */
+.smaller-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Disabled button styling */
+button:disabled {
+  background-color: #d3d3d3; /* Gray background for disabled state */
+  color: #a0a0a0; /* Lighter text color */
+  cursor: not-allowed;
+  opacity: 0.6; /* Add opacity for a clearer disabled state */
+}
+
+/* Hover effect for enabled buttons */
+button:enabled:hover {
+  background-color: #0056b3; /* Darker blue when hovered */
+}
+
+/* Align button within the form */
+.btn-wrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* OTP form container with modern style */
+.otp-form-style {
+  padding: 16px; /* Reduced padding */
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0;
+  text-align: left;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Modern styling for OTP input fields */
+.otp-input-modern {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 0.5rem;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.otp-input-modern:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Modern button styling */
+.modern-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.90rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modern-button:hover {
+  background-color: #218838;
+}
+
+/* Styling for the main alert messages */
+.fuse-alert {
+  margin-bottom: 10px; /* Reduced margin */
+  padding: 12px; /* Reduced padding */
+  border-radius: 8px;
+  border: 1px solid #007bff;
+  background-color: #f0f7ff;
+}
+
+/* Adjust additional text styling */
+.text-gray-600 {
+  color: #4a5568;
+  font-size: 1rem;
+}
+
+/* Adjust the background container and remove the gap */
+.bg-skyblue {
+  background-color: #e1eff3;
+  padding: 0;
+  margin-top: 0;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Consistent spacing between fields */
+.mt-4 {
+  margin-top: 0.5rem; /* Reduced spacing between input fields */
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+/* Custom styling for form sections */
+.flex-80 {
+  flex: 0 0 70%;
+}
+
+.flex-20 {
+  flex: 0 0 10%;
+}
+
+.gap-4 {
+  gap: 0.5rem; /* Reduced gap between fields */
+}
+
+/* Apply sky blue border */
+.border-skyblue {
+  border: 2px solid #87CEEB; /* Sky blue border */
+  border-radius: 12px; /* Optional: keep the rounded corners */
+}
+.modern-text-link {
+  color: #007bff; /* Link color */
+  cursor: pointer;
+  text-decoration: underline;
+}
+.modern-text-link:hover {
+  color: #0056b3; /* Darker color on hover */
+}
+/* Main container styling */
+.ng-container-wrapper {
+  display: flex;
+  justify-content: center; /* Centers the main form container */
+  align-items: flex-start;
+  width: 100%;
+  padding: 20px; /* Adds padding around the main container */
+}
+
+/* Adjust the form container to keep width and align left */
+.form-style {
+  margin: 0 auto; /* Center the form within the wrapper */
+  border: 2px solid #007bff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 10px;
+  max-width: 700px; /* Sets a max-width for larger screens */
+  width: 100%; /* Allows responsiveness */
+}
+
+.smaller-button, .modern-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Additional button and alert styling */
+.fuse-alert {
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #007bff;
+  background-color: #f0f7ff;
+}
+
+.otp-form-style, .otp-input-modern {
+  /* Styles for OTP container and inputs */
+}
+
+.text-gray-600, .bg-skyblue, .w-full {
+  /* Additional styling */
+}
+.country-code-select {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px; /* Reduced padding for smaller size */
+  font-size: 12px; /* Adjust font size as needed */
+  color: #0d62ec; /* text-gray-500 */
+  background-color: #e5e7eb; /* bg-gray-200 */
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-right: none; /* Remove right border */
+  border-radius: 4px 0 0 4px; /* Rounded left edge */
+  margin-right: 8px; /* Adjust margin as needed */
+  height: 40px; /* Match the height of the input field */
+  width: 110px; /* Fixed width for minimized size */
+  outline: none; /* Remove default outline */
+  cursor: pointer; /* Show pointer cursor on hover */
+  overflow: hidden; /* Hide overflow */
+  white-space: nowrap; /* Prevent text wrapping */
+  text-overflow: ellipsis; /* Show ellipsis for overflow text */
+}
+
+/* Style for the GSM input field */
+.gsm-input {
+  flex: 1; /* Take up remaining space */
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-radius: 0 4px 4px 0; /* Rounded right edge */
+  padding: 8px 12px; /* Adjust padding as needed */
+  font-size: 14px; /* Adjust font size as needed */
+  outline: none; /* Remove default outline */
+}
+
+/* Ensure the input field matches the height of the prefix */
+.mat-form-field-infix {
+  display: flex;
+  align-items: center;
+}
+.mt-4, .gap-4, .flex-80, .flex-20 {
+  /* Custom spacing adjustments */
+}
+/* Ajoute dans ton global styles.scss si tu veux le garder centralisé */
+.otp-container {
+  @apply w-full max-w-2xl p-8 bg-white rounded-3xl shadow-lg border-2 border-blue-100;
+}
+
+.otp-input {
+  @apply w-16 h-16 text-center text-xl font-semibold border border-blue-200 bg-blue-50 text-blue-700 rounded-xl focus:ring-2 focus:ring-blue-400 transition duration-150;
+}
+button.no-bg {
+    background-color: transparent !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    color: #2563eb; /* blue-600 */
+    text-decoration: underline;
+    cursor: pointer;
+    outline: none;
+    box-shadow: none;
+    transition: color 0.3s ease;
+}
+
+button.no-bg:hover {
+    color: #1e40af; /* blue-800 */
+}
+
+button.no-bg:focus,
+button.no-bg:active {
+    background-color: transparent !important;
+    box-shadow: none;
+    outline: none;
+}
+.toggle-switch.tiny {
+  border: 1px solid #a1acbb; /* bordure fine gris clair */
+  border-radius: 8px; /* angles doux */
+  padding: 2px; /* léger espacement intérieur */
+}
+.toggle-switch.tiny {
+  border: 1px solid #bfc8d5; /* fine bordure visible */
+  border-radius: 8px;
+  padding: 2px;
+  background-color: #f9fafb; /* fond léger */
+  display: inline-flex;
+  transform: scale(0.95); /* réduit légèrement la taille */
+}
+
+.toggle-option.tiny {
+  font-size: 0.8rem;
+  font-weight: 500;
+  height: 26px;
+  min-width: 90px;
+  padding: 2px 8px;
+  border-radius: 6px !important;
+  color: #334155; /* gris foncé lisible */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px; /* espace entre icône et texte */
+}
+
+.mat-button-toggle-checked {
+  background-color: #79cf96 !important; /* bleu plus propre */
+  color: #fff !important;
+  font-weight: 600;
+}
+

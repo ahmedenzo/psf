@@ -1,0 +1,101 @@
+/* Container to align action buttons */
+.actions-container {
+    display: flex;
+    justify-content: flex-end;  /* Align buttons to the right */
+    gap: 8px;                   /* Add spacing between buttons */
+}
+
+/* Modern button styling */
+.modern-button {
+    background-color: #f5f5f5;    /* Light background color for a modern look */
+    border-radius: 8px;           /* Soft rounded corners for a modern feel */
+    padding: 10px;                /* Increase padding for a more prominent look */
+    transition: background-color 0.3s ease;  /* Smooth hover transitions */
+}
+
+/* Button hover effect for interactivity */
+.modern-button:hover {
+    background-color: #e0e0e0;    /* Slightly darker background on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+}
+
+/* Material icons styling */
+mat-icon {
+    font-size: 18px;  /* Slightly smaller icon size for a sleek look */
+}
+
+/* Optional: Adjust button icon color when hovered */
+.modern-button:hover mat-icon {
+    color: #1976d2;  /* Change the icon color on hover (example: blue) */
+}
+
+.logo-img {
+    width: 60px;
+    height: 60px;
+}
+.small-text {
+    font-size: 12px; /* Or any size you prefer */
+}
+.active-button {
+    background-color: green;
+    color: white; /* Button text color */
+}
+
+.inactive-button {
+    background-color: red;
+    color: white; /* Button text color */
+}
+/* Animation for slide-in */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+/* Styling for mat-select-search */
+ngx-mat-select-search {
+  padding: 8px;
+}
+
+ngx-mat-select-search input {
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* Adjust mat-option styling */
+mat-option {
+  font-size: 14px;
+  padding: 8px 16px;
+}
+
+mat-option:hover {
+  background-color: #f3f4f6;
+}
+
+/* Ensure form layout is clean */
+form {
+  max-width: 100%;
+}
+
+/* Grid layout for responsiveness */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Button hover effects */
+button:hover {
+  transition: all 0.2s ease-in-out;
+}

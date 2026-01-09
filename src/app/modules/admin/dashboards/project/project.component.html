@@ -1,0 +1,1023 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+<!-- Modern Header -->
+<!-- Modern Header with Inline SVG Logo -->
+<div class="bg-white/60 backdrop-blur-md rounded-2xl shadow-xl ring-1 ring-gray-200">
+   <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8 py-10">
+
+    <div class="flex flex-col sm:flex-row items-center justify-between w-full gap-6">
+
+      <!-- Animated Stats SVG Logo -->
+   <div class="flex items-center space-x-4">
+  <!-- Animated Logo Container -->
+  <div class="w-20 h-20 rounded-full p-3 bg-gradient-to-br from-purple-500 via-indigo-500 to-pink-500 shadow-xl flex items-center justify-center">
+    <svg
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-full h-full"
+      fill="none"
+      stroke="white"
+      stroke-width="4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <!-- Animated bars -->
+      <rect x="30" y="60" width="6" height="20" class="animate-bar1" fill="white" />
+      <rect x="45" y="50" width="6" height="30" class="animate-bar2" fill="white" />
+      <rect x="60" y="40" width="6" height="40" class="animate-bar3" fill="white" />
+
+      <!-- Animated trend line -->
+      <polyline
+        points="33,60 48,50 63,40"
+        class="animate-line"
+        stroke="white"
+        stroke-width="3"
+        fill="none"
+      />
+
+      <!-- Data points -->
+      <circle cx="33" cy="60" r="2.5" fill="white" />
+      <circle cx="48" cy="50" r="2.5" fill="white" />
+      <circle cx="63" cy="40" r="2.5" fill="white" />
+    </svg>
+  </div>
+
+  <!-- Title -->
+ <div *ngIf="isSuperAdmin || isAdmin || isUser">
+  <h2 class="text-2xl font-bold text-gray-800">
+    <ng-container *ngIf="isSuperAdmin">Statistics Activity Logs and History</ng-container>
+    <ng-container *ngIf="isAdmin">Statistics and History</ng-container>
+    <ng-container *ngIf="isUser">Statistics</ng-container>
+  </h2>
+</div>
+
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Main -->
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+            <div class="w-full max-w-screen-xl mx-auto">
+                <!-- Tabs -->
+                <mat-tab-group
+                    class="sm:px-2"
+                    mat-stretch-tabs="false"
+                    [animationDuration]="'0'">
+
+                    <!-- Home -->
+                      <mat-tab label="Statistics">
+                        <ng-template matTabContent>
+                            
+
+                            
+                  <div class=" flex flex-col flex-autogrid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                    <div *ngIf="isSuperAdmin" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+
+  <!-- Total PINs Sent -->
+                          <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+                            <div class="flex items-center justify-between mb-2">
+                              <span class="text-sm text-gray-500">Total PINs Sent</span>
+                            <mat-icon
+                              matTooltip="Total PINs sent since start"
+                              svgIcon="heroicons_solid:lock-closed"
+                              class="text-primary-500 w-5 h-5 cursor-pointer">
+                            </mat-icon>
+
+                            </div>
+                            <div class="text-2xl font-semibold text-primary-600">
+                              {{ formatNumber(isSuperAdmin ? overallPins : overallPinsad) }}
+                            </div>
+                          </div>
+
+                          <!-- PINs Sent (Last 24h) -->
+                          <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+                            <div class="flex items-center justify-between mb-2">
+                              <span class="text-sm text-gray-500">PINs Sent (Last 24h)</span>
+                              <mat-icon
+                                matTooltip="Number of PINs sent in the last 24 hours"
+                                svgIcon="heroicons_solid:clock"
+                                class="text-primary-400 w-5 h-5 cursor-pointer">
+                              </mat-icon>
+                            </div>
+                            <div class="text-2xl font-semibold text-primary-600">
+                              {{ formatNumber(isSuperAdmin ? todayPins : todayPinsad) }}
+                            </div>
+                          </div>
+
+                          <!-- Total OTPs Sent -->
+                          <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+                            <div class="flex items-center justify-between mb-2">
+                              <span class="text-sm text-gray-500">Total OTPs Sent</span>
+                              <mat-icon
+                                matTooltip="Total OTPs sent since start"
+                                svgIcon="heroicons_solid:chat-bubble-left-right"
+                                class="text-accent-500 w-5 h-5 cursor-pointer">
+                              </mat-icon>
+                            </div>
+                            <div class="text-2xl font-semibold text-accent-600">
+                              {{ formatNumber(isSuperAdmin ? overallOtps : overallOtpsad) }}
+                            </div>
+                          </div>
+
+                          <!-- OTPs Sent (Last 24h) -->
+                          <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+                            <div class="flex items-center justify-between mb-2">
+                              <span class="text-sm text-gray-500">OTPs Sent (Last 24h)</span>
+                              <mat-icon
+                                matTooltip="Number of OTPs sent in the last 24 hours"
+                                svgIcon="heroicons_solid:clock"
+                                class="text-accent-400 w-5 h-5 cursor-pointer">
+                              </mat-icon>
+                            </div>
+                            <div class="text-2xl font-semibold text-accent-600">
+                              {{ formatNumber(isSuperAdmin ? todayOtps : todayOtpsad) }}
+                            </div>
+                          </div>
+                        </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+  <!-- Admin Cards -->
+  <ng-container *ngIf="isAdmin">
+    <!-- Total PINs Sent -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">Total PINs Sent</span>
+        <mat-icon
+          matTooltip="Total PINs sent since start"
+          svgIcon="heroicons_solid:lock-closed"
+          class="text-primary-500 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-primary-600">
+        {{ formatNumber(overallPinsad) }}
+      </div>
+    </div>
+    <!-- PINs Sent (Last 24h) -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">PINs Sent (Last 24h)</span>
+        <mat-icon
+          matTooltip="Number of PINs sent in the last 24 hours"
+          svgIcon="heroicons_solid:clock"
+          class="text-primary-400 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-primary-600">
+        {{ formatNumber(todayPinsad) }}
+      </div>
+    </div>
+    <!-- Total OTPs Sent -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">Total OTPs Sent</span>
+        <mat-icon
+          matTooltip="Total OTPs sent since start"
+          svgIcon="heroicons_solid:chat-bubble-left-right"
+          class="text-accent-500 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-accent-600">
+        {{ formatNumber(overallOtpsad) }}
+      </div>
+    </div>
+    <!-- OTPs Sent (Last 24h) -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">OTPs Sent (Last 24h)</span>
+        <mat-icon
+          matTooltip="Number of OTPs sent in the last 24 hours"
+          svgIcon="heroicons_solid:clock"
+          class="text-accent-400 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-accent-600">
+        {{ formatNumber(todayOtpsad) }}
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- User Cards -->
+  <ng-container *ngIf="isUser">
+    <!-- Total PINs Sent -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">Total PINs Sent</span>
+        <mat-icon
+          matTooltip="Total PINs sent since start"
+          svgIcon="heroicons_solid:lock-closed"
+          class="text-primary-500 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-primary-600">
+        {{ formatNumber(overallPinsAgent) }}
+      </div>
+    </div>
+    <!-- PINs Sent (Last 24h) -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">PINs Sent (Last 24h)</span>
+        <mat-icon
+          matTooltip="Number of PINs sent in the last 24 hours"
+          svgIcon="heroicons_solid:clock"
+          class="text-primary-400 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-primary-600">
+        {{ formatNumber(todayPinsAgent) }}
+      </div>
+    </div>
+    <!-- Total OTPs Sent -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">Total OTPs Sent</span>
+        <mat-icon
+          matTooltip="Total OTPs sent since start"
+          svgIcon="heroicons_solid:chat-bubble-left-right"
+          class="text-accent-500 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-accent-600">
+        {{ formatNumber(overallOtpsAgent) }}
+      </div>
+    </div>
+    <!-- OTPs Sent (Last 24h) -->
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-5">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-500">OTPs Sent (Last 24h)</span>
+        <mat-icon
+          matTooltip="Number of OTPs sent in the last 24 hours"
+          svgIcon="heroicons_solid:clock"
+          class="text-accent-400 w-5 h-5 cursor-pointer">
+        </mat-icon>
+      </div>
+      <div class="text-2xl font-semibold text-accent-600">
+        {{ formatNumber(todayOtpsAgent) }}
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+
+<!-- Admin Chart -->
+<div *ngIf="isAdmin" class="sm:col-span-2 md:col-span-4 flex flex-col p-4 bg-white/95 backdrop-blur-lg shadow-sm rounded-xl border border-gray-200">
+    <div class="grid grid-cols-1 sm:grid-cols-2 items-center justify-between gap-3 mb-4">
+        <h2 class="text-lg font-bold text-gray-900 tracking-tight relative flex items-center">
+            <mat-icon class="icon-size-5 text-blue-700 mr-2" svgIcon="heroicons_solid:chart-bar"></mat-icon>
+            PIN & OTP Analytics for Agency
+            <span class="absolute -bottom-1 left-0 w-16 h-1 bg-gradient-to-r from-blue-500 to-gray-500 rounded-full"></span>
+        </h2>
+        <div class="flex items-center gap-2 justify-self-end flex-wrap">
+            <!-- Date Picker -->
+            <div class="relative flex items-center bg-gray-50 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 rounded-md px-3 py-1 cursor-pointer active:scale-95" (click)="datePicker.open()">
+                <mat-icon class="icon-size-4 text-gray-700 mr-1" svgIcon="heroicons_solid:calendar"></mat-icon>
+                <span class="text-xs font-semibold text-gray-900">
+                    <ng-container *ngIf="dateValue">{{ dateValue | date: 'mediumDate' }}</ng-container>
+                    <ng-container *ngIf="!dateValue">Select Date</ng-container>
+                </span>
+                <mat-form-field class="fuse-mat-dense invisible absolute inset-0 opacity-0 pointer-events-none" [subscriptSizing]="'dynamic'">
+                    <input matInput [formControl]="dateControl" [matDatepicker]="datePicker" (dateChange)="onDateChange($event)">
+                    <mat-datepicker #datePicker>
+                        <mat-datepicker-actions>
+                            <button mat-button class="text-gray-600 hover:text-gray-900 text-xs" (click)="clearDate()" matDatepickerCancel>Clear</button>
+                            <button mat-flat-button color="primary" class="bg-blue-700 hover:bg-blue-800 hover:shadow-sm active:scale-95 text-white rounded-md px-3 py-1 text-xs" matDatepickerApply>Apply</button>
+                        </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
+            </div>
+            <!-- Download CSV Button -->
+            <button class="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out hover:shadow-md active:scale-95" (click)="downloadChartCSVagnecy()">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Export CSV
+            </button>
+        </div>
+    </div>
+    <div class="flex flex-col w-full">
+        <apx-chart
+            class="flex-auto w-full h-80"
+            [chart]="chartAgencyIssues.chart"
+            [colors]="chartAgencyIssues.colors"
+            [dataLabels]="chartAgencyIssues.dataLabels"
+            [labels]="chartAgencyIssues.labels"
+            [series]="chartAgencyIssues.series"
+            [xaxis]="chartAgencyIssues.xaxis"
+            [yaxis]="chartAgencyIssues.yaxis"
+            [stroke]="chartAgencyIssues.stroke"
+            [tooltip]="chartAgencyIssues.tooltip"
+            [grid]="chartAgencyIssues.grid"
+            [legend]="chartAgencyIssues.legend">
+        </apx-chart>
+    </div>
+</div>
+                     <!-- Github issues summary -->
+<div *ngIf="isSuperAdmin" class="sm:col-span-2 md:col-span-4 flex flex-col p-4 bg-white/95 backdrop-blur-lg shadow-sm rounded-xl border border-gray-200">
+    <div class="grid grid-cols-1 sm:grid-cols-2 items-center justify-between gap-3 mb-4">
+        <h2 class="text-lg font-bold text-gray-900 tracking-tight relative flex items-center">
+            <mat-icon class="icon-size-5 text-blue-700 mr-2" svgIcon="heroicons_solid:chart-bar"></mat-icon>
+            PIN & OTP Analytics for All Banks
+            <span class="absolute -bottom-1 left-0 w-16 h-1 bg-gradient-to-r from-blue-500 to-gray-500 rounded-full"></span>
+        </h2>
+        <div class="flex items-center gap-2 justify-self-end flex-wrap">
+            <!-- Date Picker -->
+            <div class="relative flex items-center bg-gray-50 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 rounded-md px-3 py-1 cursor-pointer active:scale-95" (click)="datePicker.open()">
+                <mat-icon class="icon-size-4 text-gray-700 mr-1" svgIcon="heroicons_solid:calendar"></mat-icon>
+                <span class="text-xs font-semibold text-gray-900">
+                    <ng-container *ngIf="dateValue">{{ dateValue | date: 'mediumDate' }}</ng-container>
+                    <ng-container *ngIf="!dateValue">Select Date</ng-container>
+                </span>
+                <mat-form-field class="fuse-mat-dense invisible absolute inset-0 opacity-0 pointer-events-none" [subscriptSizing]="'dynamic'">
+                    <input matInput [formControl]="dateControl" [matDatepicker]="datePicker" (dateChange)="onDateChange($event)">
+                    <mat-datepicker #datePicker>
+                        <mat-datepicker-actions>
+                            <button mat-button class="text-gray-600 hover:text-gray-900 text-xs" (click)="clearDate()" matDatepickerCancel>Clear</button>
+                            <button mat-flat-button color="primary" class="bg-blue-700 hover:bg-blue-800 hover:shadow-sm active:scale-95 text-white rounded-md px-3 py-1 text-xs" matDatepickerApply>Apply</button>
+                        </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- Download CSV Button -->
+        <button class="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out hover:shadow-md active:scale-95" (click)="downloadChartCSV()">
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+    Export CSV
+</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col w-full">
+        <apx-chart
+            class="flex-auto w-full h-80"
+            [chart]="chartGithubIssues.chart"
+            [colors]="chartGithubIssues.colors"
+            [dataLabels]="chartGithubIssues.dataLabels"
+            [labels]="chartGithubIssues.labels"
+            [series]="chartGithubIssues.series"
+            [xaxis]="chartGithubIssues.xaxis"
+            [yaxis]="chartGithubIssues.yaxis"
+            [stroke]="chartGithubIssues.stroke"
+            [tooltip]="chartGithubIssues.tooltip"
+            [grid]="chartGithubIssues.grid"
+            [legend]="chartGithubIssues.legend">
+        </apx-chart>
+    </div>
+</div>
+                            <!-- Agent Chart -->
+<div *ngIf="isUser" class="sm:col-span-2 md:col-span-4 flex flex-col p-4 bg-white/95 backdrop-blur-lg shadow-sm rounded-xl border border-gray-200">
+    <div class="grid grid-cols-1 sm:grid-cols-2 items-center justify-between gap-3 mb-4">
+        <h2 class="text-lg font-bold text-gray-900 tracking-tight relative flex items-center">
+            <mat-icon class="icon-size-5 text-blue-700 mr-2" svgIcon="heroicons_solid:chart-bar"></mat-icon>
+            PIN & OTP Sending Summary
+            <span class="absolute -bottom-1 left-0 w-16 h-1 bg-gradient-to-r from-blue-500 to-gray-500 rounded-full"></span>
+        </h2>
+        <div class="flex items-center gap-2 justify-self-end flex-wrap">
+            <!-- Date Picker -->
+            <div class="relative flex items-center bg-gray-50 hover:bg-gray-100 hover:shadow-sm transition-all duration-150 rounded-md px-3 py-1 cursor-pointer active:scale-95" (click)="datePicker.open()">
+                <mat-icon class="icon-size-4 text-gray-700 mr-1" svgIcon="heroicons_solid:calendar"></mat-icon>
+                <span class="text-xs font-semibold text-gray-900">
+                    <ng-container *ngIf="dateValue">{{ dateValue | date: 'mediumDate' }}</ng-container>
+                    <ng-container *ngIf="!dateValue">Select Date</ng-container>
+                </span>
+                <mat-form-field class="fuse-mat-dense invisible absolute inset-0 opacity-0 pointer-events-none" [subscriptSizing]="'dynamic'">
+                    <input matInput [formControl]="dateControl" [matDatepicker]="datePicker" (dateChange)="onDateChange($event)">
+                    <mat-datepicker #datePicker>
+                        <mat-datepicker-actions>
+                            <button mat-button class="text-gray-600 hover:text-gray-900 text-xs" (click)="clearDate()" matDatepickerCancel>Clear</button>
+                            <button mat-flat-button color="primary" class="bg-blue-700 hover:bg-blue-800 hover:shadow-sm active:scale-95 text-white rounded-md px-3 py-1 text-xs" matDatepickerApply>Apply</button>
+                        </mat-datepicker-actions>
+                    </mat-datepicker>
+                </mat-form-field>
+            </div>
+            <!-- Download CSV Button -->
+            <button class="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out hover:shadow-md active:scale-95" (click)="downloadUserSummaryCSV()">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Export CSV
+            </button>
+        </div>
+    </div>
+    <div class="flex flex-col w-full">
+        <apx-chart
+            class="flex-auto w-full h-80"
+            [chart]="chartAgentIssues.chart"
+            [colors]="chartAgentIssues.colors"
+            [dataLabels]="chartAgentIssues.dataLabels"
+            [labels]="chartAgentIssues.labels"
+            [series]="chartAgentIssues.series"
+            [xaxis]="chartAgentIssues.xaxis"
+            [yaxis]="chartAgentIssues.yaxis"
+            [stroke]="chartAgentIssues.stroke"
+            [tooltip]="chartAgentIssues.tooltip"
+            [grid]="chartAgentIssues.grid"
+            [legend]="chartAgentIssues.legend">
+        </apx-chart>
+    </div>
+</div>
+
+<div *ngIf="isSuperAdmin" class="sm:col-span-6 flex flex-col p-6 bg-white/90 backdrop-blur-xl shadow-lg rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-xl">
+    <div class="grid grid-cols-1 sm:grid-cols-2 items-center justify-between gap-4 mb-6">
+        <h2 class="text-xl font-semibold text-gray-800 tracking-tight relative flex items-center">
+            <mat-icon class="icon-size-6 text-indigo-600 mr-3" svgIcon="heroicons_solid:building-office"></mat-icon>
+            Bank Details Analytics
+            <span class="absolute -bottom-2 left-0 w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></span>
+        </h2>
+        <div class="flex items-center gap-3 justify-self-end flex-wrap">
+            <button class="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out hover:shadow-md active:scale-95" (click)="downloadBankDetailsCSV()">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Export CSV
+            </button>
+        </div>
+    </div>
+<div class="flex flex-col flex-auto overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+        <table mat-table [dataSource]="dataSourceBudgetDetails">
+            <!-- Bank Name -->
+            <ng-container matColumnDef="bank">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-left font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10 rounded-tl-md">Bank Name</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full border-2 border-gray-300" [ngClass]="colorMap[budget.bank]"></div>
+                        <span class="ml-4 text-gray-800 font-medium">{{ budget.bank }}</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Total PINs Sent -->
+            <ng-container matColumnDef="totalPinSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10">Total PINs Sent</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50 text-right font-medium text-gray-800">
+                    {{ budget.totalPinSend | number }}
+                </td>
+            </ng-container>
+
+            <!-- Total OTPs Sent -->
+            <ng-container matColumnDef="totalOtpSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10">Total OTPs Sent</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50 text-right font-medium text-gray-800">
+                    {{ budget.totalOtpSend | number }}
+                </td>
+            </ng-container>
+
+            <!-- Average OTP Sent Percentage -->
+            <ng-container matColumnDef="averageOtpSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10">Avg OTP Sent (%)</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50">
+                    <div class="flex items-center justify-end space-x-3">
+                        <div class="relative h-2 w-20 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="absolute top-0 left-0 h-full transition-all duration-300 rounded-full" 
+                                 [style.width.%]="budget.averageOtpSend"
+                                 [ngClass]="{
+                                     'bg-red-500': budget.averageOtpSend < 20,
+                                     'bg-orange-400': budget.averageOtpSend >= 20 && budget.averageOtpSend < 50,
+                                     'bg-green-500': budget.averageOtpSend >= 50
+                                 }"></div>
+                        </div>
+                        <span class="text-gray-800 font-medium min-w-[3rem] text-right">{{ budget.averageOtpSend }}%</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Average PIN Sent Percentage -->
+            <ng-container matColumnDef="averagePinSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10 rounded-tr-md">Avg PIN Sent (%)</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50">
+                    <div class="flex items-center justify-end space-x-3">
+                        <div class="relative h-2 w-20 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="absolute top-0 left-0 h-full transition-all duration-300 rounded-full" 
+                                 [style.width.%]="budget.averagePinSend"
+                                 [ngClass]="{
+                                     'bg-red-500': budget.averagePinSend < 20,
+                                     'bg-orange-400': budget.averagePinSend >= 20 && budget.averagePinSend < 50,
+                                     'bg-green-500': budget.averagePinSend >= 50
+                                 }"></div>
+                        </div>
+                        <span class="text-gray-800 font-medium min-w-[3rem] text-right">{{ budget.averagePinSend }}%</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+
+ <mat-paginator #paginatoripad
+               [length]="dataSourceBudgetDetails.data.length"
+               [pageSize]="pageSizee"
+               [pageSizeOptions]="[5,10,20,30]"
+               showFirstLastButtons>
+</mat-paginator>
+</div>
+</div>
+   
+           <div *ngIf="isAdmin" class="sm:col-span-6 flex flex-col p-6 bg-white/90 backdrop-blur-xl shadow-lg rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-xl">
+    <div class="grid grid-cols-1 sm:grid-cols-2 items-center justify-between gap-4 mb-6">
+        <h2 class="text-xl font-semibold text-gray-800 tracking-tight relative flex items-center">
+            <mat-icon class="icon-size-6 text-indigo-600 mr-3" svgIcon="heroicons_solid:building-office"></mat-icon>
+            Agency Details Analytics
+            <span class="absolute -bottom-2 left-0 w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></span>
+        </h2>
+        <div class="flex items-center gap-3 justify-self-end flex-wrap">
+            <button class="flex items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out hover:shadow-md active:scale-95" (click)="downloadAgencyDetailsCSV()">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Export CSV
+            </button>
+        </div>
+    </div>
+   <div class="flex flex-col flex-auto overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div class="overflow-x-auto">
+
+      <mat-form-field appearance="outline" class="w-full mb-2">
+
+    <input matInput (keyup)="applyFilterAgency($event)" placeholder="Filter...">
+</mat-form-field>
+
+        <table class="min-w-full text-sm" mat-table [dataSource]="dataSourceBudgetDetailsAdmin">
+            <!-- Agency Name -->
+            <ng-container matColumnDef="agency">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-left font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10 rounded-tl-md">Agency Name</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full border-2 border-gray-300" [ngClass]="colorMap[budget.agency]"></div>
+                        <span class="ml-4 text-gray-800 font-medium">{{ budget.agency }}</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Total PINs Sent -->
+            <ng-container matColumnDef="totalPinSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10">Total PINs Sent</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50 text-right font-medium text-gray-800">
+                    {{ budget.totalPinSend | number }}
+                </td>
+            </ng-container>
+
+            <!-- Total OTPs Sent -->
+            <ng-container matColumnDef="totalOtpSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10">Total OTPs Sent</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50 text-right font-medium text-gray-800">
+                    {{ budget.totalOtpSend | number }}
+                </td>
+            </ng-container>
+
+            <!-- Average PIN Sent Percentage -->
+            <ng-container matColumnDef="averagePinSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10">Avg PIN Sent (%)</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50">
+                    <div class="flex items-center justify-end space-x-3">
+                        <div class="relative h-2 w-20 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="absolute top-0 left-0 h-full transition-all duration-300 rounded-full" 
+                                 [style.width.%]="budget.averagePinSend"
+                                 [ngClass]="{
+                                     'bg-red-500': budget.averagePinSend < 20,
+                                     'bg-orange-400': budget.averagePinSend >= 20 && budget.averagePinSend < 50,
+                                     'bg-green-500': budget.averagePinSend >= 50
+                                 }"></div>
+                        </div>
+                        <span class="text-gray-800 font-medium min-w-[3rem] text-right">{{ budget.averagePinSend }}%</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Average OTP Sent Percentage -->
+            <ng-container matColumnDef="averageOtpSend">
+                <th mat-header-cell *matHeaderCellDef class="px-6 py-3 text-right font-bold uppercase tracking-wide text-gray-700 bg-gray-100 border-b-2 border-gray-300 sticky top-0 z-10 rounded-tr-md">Avg OTP Sent (%)</th>
+                <td mat-cell *matCellDef="let budget" class="px-6 py-4 border-b border-gray-50">
+                    <div class="flex items-center justify-end space-x-3">
+                        <div class="relative h-2 w-20 flex-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="absolute top-0 left-0 h-full transition-all duration-300 rounded-full" 
+                                 [style.width.%]="budget.averageOtpSend"
+                                 [ngClass]="{
+                                     'bg-red-500': budget.averageOtpSend < 20,
+                                     'bg-orange-400': budget.averageOtpSend >= 20 && budget.averageOtpSend < 50,
+                                     'bg-green-500': budget.averageOtpSend >= 50
+                                 }"></div>
+                        </div>
+                        <span class="text-gray-800 font-medium min-w-[3rem] text-right">{{ budget.averageOtpSend }}%</span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row Definitions -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumnss"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnss;"></tr>
+        </table>
+    </div>
+
+    <mat-paginator #paginatoradmine
+                   [length]="filteredagent.length"
+                   [pageSize]="pageSizeee"
+                   [pageSizeOptions]="[10, 20, 30, 50, 100]"
+                   showFirstLastButtons
+                   class="bg-gray-50 border-t border-gray-200 px-6 py-4 text-sm">
+    </mat-paginator>
+</div>
+</div>
+                            
+                            
+                            
+                        </div>
+                    </ng-template>
+                </mat-tab>
+
+           
+<mat-tab label="Activity Logs" *ngIf="isSuperAdmin">
+    <ng-template matTabContent>
+        <div *ngIf="isSuperAdmin" class="grid grid-cols-1 sm:grid-cols-1 gap-8 w-full min-w-0 p-8 bg-gradient-to-br from-gray-50 to-indigo-50/50">
+            <!-- Cards Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- Active Sessions Card -->
+                <div class="relative flex flex-col p-6 bg-white/95 backdrop-blur-2xl shadow-xl rounded-3xl border border-indigo-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-t-3xl"></div>
+                    <div class="flex items-start justify-between">
+                        <div class="text-xl font-bold text-gray-900 tracking-tight">Active Sessions</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-4">
+                        <div class="text-6xl sm:text-7xl font-extrabold tracking-tight leading-none text-indigo-600 animate-pulse">{{activeSessionCount}}</div>
+                        <div class="text-lg font-medium text-indigo-500 mt-2">Sessions</div>
+                    </div>
+                </div>
+
+                <!-- Errors Card -->
+                <div class="relative flex flex-col p-6 bg-white/95 backdrop-blur-2xl shadow-xl rounded-3xl border border-red-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 cursor-pointer" (click)="filterErrorLogs()">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 to-orange-500 rounded-t-3xl"></div>
+                    <div class="flex items-start justify-between">
+                        <div class="text-xl font-bold text-gray-900 tracking-tight">Errors</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-4">
+                        <div class="text-6xl sm:text-7xl font-extrabold tracking-tight leading-none text-red-500 animate-pulse">{{errorCount}}</div>
+                        <div class="text-lg font-medium text-red-500 mt-2">Errors</div>
+                    </div>
+                </div>
+
+                <!-- Response Time Card -->
+                <div class="relative flex flex-col p-6 bg-white/95 backdrop-blur-2xl shadow-xl rounded-3xl border border-green-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 to-teal-500 rounded-t-3xl"></div>
+                    <div class="flex items-start justify-between">
+                        <div class="text-xl font-bold text-gray-900 tracking-tight">Response Time</div>
+                    </div>
+                    <div class="flex flex-col items-center mt-4">
+                        <div class="text-6xl sm:text-7xl font-extrabold tracking-tight leading-none text-green-500 animate-pulse">{{averageResponseTime}}</div>
+                        <div class="text-lg font-medium text-green-500 mt-2">ms</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log Details Section -->
+            <div class="flex flex-col p-8 bg-white/95 backdrop-blur-2xl shadow-xl rounded-3xl border border-gray-100 transition-all duration-300 hover:shadow-2xl">
+                <div class="relative text-2xl font-bold text-gray-900 tracking-tight mb-8">
+                    Log Details
+                    <span class="absolute -bottom-2 left-0 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></span>
+                </div>
+
+                <div class="flex justify-end mb-4" *ngIf="showErrorLogs">
+                    <button mat-button color="primary" (click)="clearErrorFilter()">Show All Logs</button>
+                </div>
+
+                <div class="flex flex-col flex-auto overflow-x-auto">
+                    <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="min-w-full text-sm">
+                        <!-- Timestamp -->
+                        <ng-container matColumnDef="timestamp">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80 rounded-tl-lg">Date</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 text-gray-800 hover:bg-indigo-50/30 transition-colors duration-200">{{element.timestamp}}</td>
+                        </ng-container>
+
+                        <!-- Username -->
+                        <ng-container matColumnDef="username">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80">Username</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 text-gray-800 hover:bg-indigo-50/30 transition-colors duration-200">{{element.username}}</td>
+                        </ng-container>
+
+                        <!-- Session ID -->
+                        <ng-container matColumnDef="sessionId">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80">Session ID</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 text-gray-800 hover:bg-indigo-50/30 transition-colors duration-200">{{element.sessionId}}</td>
+                        </ng-container>
+
+                        <!-- Request Path -->
+                        <ng-container matColumnDef="requestPath">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80">Request Path</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 text-gray-800 hover:bg-indigo-50/30 transition-colors duration-200">{{element.requestPath}}</td>
+                        </ng-container>
+
+                        <!-- Method -->
+                        <ng-container matColumnDef="method">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80">Method</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 text-gray-800 hover:bg-indigo-50/30 transition-colors duration-200">{{element.method}}</td>
+                        </ng-container>
+
+                        <!-- Status Code -->
+                        <ng-container matColumnDef="statusCode">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80">Status Code</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 text-gray-800 hover:bg-indigo-50/30 transition-colors duration-200">{{element.statusCode}}</td>
+                        </ng-container>
+
+                        <!-- Expand -->
+                        <ng-container matColumnDef="expand">
+                            <th mat-header-cell *matHeaderCellDef class="px-4 py-4 text-left font-semibold text-gray-900 bg-gray-100/80 rounded-tr-lg">Request/Response</th>
+                            <td mat-cell *matCellDef="let element" class="px-4 py-4 border-t border-gray-100 hover:bg-indigo-50/30 transition-colors duration-200">
+                                <button mat-icon-button aria-label="expand row" 
+                                        (click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation()"
+                                        class="text-indigo-600 hover:text-indigo-800 transition-colors duration-200 transform hover:scale-110">
+                                    <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                                    <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <!-- Expanded Detail -->
+                        <ng-container matColumnDef="expandedDetail">
+                            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length" class="bg-gray-50/80">
+                                <div class="p-6" [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
+                                    <div class="text-gray-800 bg-white/90 rounded-lg p-4 shadow-sm">
+                                        <strong class="text-sm font-semibold text-gray-900">Request Body:</strong>
+                                        <pre class="bg-gray-100/50 p-4 rounded-lg mt-2 text-sm font-mono">{{element.requestBody}}</pre>
+                                        <strong class="text-sm font-semibold text-gray-900">Response Body:</strong>
+                                        <pre class="bg-gray-100/50 p-4 rounded-lg mt-2 text-sm font-mono">{{element.responseBody}}</pre>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand" class="bg-gray-100/80"></tr>
+                        <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" 
+                            class="hover:bg-indigo-50/30 transition-colors duration-200" 
+                            [class.example-expanded-row]="expandedElement === element"
+                            (click)="expandedElement = expandedElement === element ? null : element"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                    </table>
+
+                    <!-- Paginator -->
+                    <mat-paginator #paginator
+                                   [length]="totalLogs"
+                                   [pageSize]="pageSize"
+                                   [pageIndex]="pageIndex"
+                                   [pageSizeOptions]="[10, 100, 200, 500, 1000, 2000, 5000]"
+                                   showFirstLastButtons
+                                   class="bg-white/95 backdrop-blur-xl border-t border-gray-100 px-4 py-4 text-sm rounded-b-3xl">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</mat-tab>
+
+
+<mat-tab label="History" *ngIf="isSuperAdmin || isAdmin || isUser ">
+  <ng-template matTabContent>
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 w-full min-w-0 p-6">
+
+      <!-- Carte Historique des envois -->
+      <div class="col-span-4 bg-white dark:bg-gray-900 p-6 shadow rounded-2xl overflow-hidden">
+
+        <!-- Titre -->
+        <div class="text-xl font-semibold tracking-tight text-gray-800 dark:text-white">
+          PIN/OTP Delivery History
+        </div>
+
+        <!-- ======= PANNEAU DE FILTRES ======= -->
+        <div class="flex flex-col gap-4 mt-6">
+<!-- ======= STAT CARDS ======= -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+
+  <!-- PIN Card -->
+  <div class="flex items-center justify-between bg-green-50 dark:bg-gray-800 p-3 rounded-lg border border-green-100 dark:border-gray-700">
+    <div>
+      <p class="text-xs text-gray-500 dark:text-gray-300 font-medium">PIN Sent (Today)</p>
+      <p class="text-xl font-bold text-green-600 dark:text-green-400 mt-1">
+        {{ todayPinCount || 0 }}
+      </p>
+    </div>
+    <div class="flex items-center justify-center bg-green-100 dark:bg-green-900 p-2 rounded-full">
+      <mat-icon class="text-green-600 dark:text-green-300 text-xl">lock</mat-icon>
+    </div>
+  </div>
+
+  <!-- OTP Card -->
+  <div class="flex items-center justify-between bg-blue-50 dark:bg-gray-800 p-3 rounded-lg border border-blue-100 dark:border-gray-700">
+    <div>
+      <p class="text-xs text-gray-500 dark:text-gray-300 font-medium">OTP Sent (Today)</p>
+      <p class="text-xl font-bold text-blue-600 dark:text-blue-400 mt-1">
+        {{ todayOtpCount || 0 }}
+      </p>
+    </div>
+    <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-900 p-2 rounded-full">
+      <mat-icon class="text-blue-600 dark:text-blue-300 text-xl">verified_user</mat-icon>
+    </div>
+  </div>
+
+</div>
+<!-- ======= /STAT CARDS ======= -->
+
+          <!-- Ligne 1 -->
+          <div class="flex flex-wrap gap-4 items-end">
+            <!-- Type -->
+            <mat-form-field appearance="outline" class="w-56">
+              <mat-label>Type</mat-label>
+              <mat-select [(ngModel)]="filters.type" (selectionChange)="onFilterChange()">
+                <mat-option *ngFor="let t of types" [value]="t">{{ t }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-56">
+              <mat-label>OperationType</mat-label>
+              <mat-select [(ngModel)]="filters.operationType" (selectionChange)="onFilterChange()">
+                <mat-option *ngFor="let t of operationType" [value]="t">{{ t }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Agent -->
+            <mat-form-field appearance="outline" class="w-56" *ngIf="isSuperAdmin || isAdmin ">
+              <mat-label>Agent</mat-label>
+              <mat-select [(ngModel)]="filters.processedBy" (selectionChange)="onFilterChange()">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let agent of agents" [value]="agent">{{ agent }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Bank -->
+            <mat-form-field appearance="outline" class="w-56" *ngIf="isSuperAdmin ">
+              <mat-label>Bank</mat-label>
+              <mat-select [(ngModel)]="filters.bankName" (selectionChange)="onFilterChange()">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let bank of banks" [value]="bank">{{ bank }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Branch -->
+            <mat-form-field appearance="outline" class="w-56" *ngIf="isSuperAdmin || isAdmin ">
+              <mat-label>Branch</mat-label>
+              <mat-select [(ngModel)]="filters.branchName" (selectionChange)="onFilterChange()">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let branch of branches" [value]="branch">{{ branch }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Ligne 2 -->
+          <div class="flex flex-wrap gap-4 items-center">
+            <!-- Phone -->
+            <mat-form-field appearance="outline" class="w-56">
+              <mat-label>Phone</mat-label>
+              <input matInput [(ngModel)]="filters.customPhoneNumber" (ngModelChange)="onFilterChange()" placeholder="Number">
+            </mat-form-field>
+
+            <!-- Card Number -->
+            <mat-form-field appearance="outline" class="w-56">
+              <mat-label>Card Number</mat-label>
+              <input matInput [(ngModel)]="filters.maskedPan" (ngModelChange)="onFilterChange()" placeholder="Masked Card">
+            </mat-form-field>
+
+            <!-- From Date -->
+            <mat-form-field appearance="outline" class="w-56">
+              <mat-label>From</mat-label>
+              <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="filters.fromDate" (dateChange)="onFilterChange()" placeholder="MM/DD/YYYY">
+              <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+              <mat-datepicker #pickerFrom></mat-datepicker>
+            </mat-form-field>
+
+            <!-- To Date -->
+            <mat-form-field appearance="outline" class="w-56">
+              <mat-label>To</mat-label>
+              <input matInput [matDatepicker]="pickerTo" [(ngModel)]="filters.toDate" (dateChange)="onFilterChange()" placeholder="MM/DD/YYYY">
+              <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+              <mat-datepicker #pickerTo></mat-datepicker>
+            </mat-form-field>
+
+            <!-- Bouton Reset -->
+            <button mat-stroked-button 
+              class="bg-red-500 hover:bg-red-600 text-white font-medium rounded-full px-6 py-2 h-12 transition duration-200"
+              (click)="clearFilters()">
+              Reset Filters
+            </button>
+            <button mat-stroked-button 
+    class="bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-full px-6 py-2 h-12 transition duration-200"
+    (click)="exportToCsv()">
+    Export CSV
+  </button>
+          </div>
+        </div>
+        <!-- ======= /Panneau de filtres ======= -->
+
+        <!-- ======= Tableau ======= -->
+        <div class="mt-6 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+          <table mat-table [dataSource]="dataSourcex" class="min-w-full text-sm text-gray-900 dark:text-white">
+
+            <!-- Colonne Type -->
+      <!-- Colonne Type -->
+<ng-container matColumnDef="type">
+  <th mat-header-cell *matHeaderCellDef class="whitespace-nowrap">Type</th>
+  <td mat-cell *matCellDef="let item" class="truncate">
+    <span
+      class="px-2 py-1 rounded-full text-xs font-semibold"
+      [ngClass]="{
+        'bg-green-100 text-blue-800': item?.type === 'PIN',
+        'bg-blue-100 text-green-800': item?.type === 'OTP',
+        'bg-gray-200 text-gray-800': !item?.type || item?.type === 'N/A',
+        'bg-yellow-100 text-yellow-800': item?.type !== 'PIN' && item?.type !== 'OTP' && item?.type
+      }"
+    >
+      {{ item?.type || 'N/A' }}
+    </span>
+  </td>
+</ng-container>
+
+        <ng-container matColumnDef="operationType">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">OperationType</th>
+              <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+                {{ item?.operationType || 'N/A' }}
+              </td>
+            </ng-container>
+
+            <!-- Colonne Date Envoi -->
+            <ng-container matColumnDef="sentAt">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">Sent Date</th>
+            <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+  {{ item?.sentAt ? formatDate(item.sentAt) : 'N/A' }}
+</td>
+
+            </ng-container>
+
+
+
+         
+            <!-- Nom Agent -->
+            <ng-container matColumnDef="processedBy">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">Agent Name</th>
+              <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+                {{ item?.processedBy || 'N/A' }}
+              </td>
+            </ng-container>
+
+            <!-- Téléphone -->
+            <ng-container matColumnDef="customPhoneNumber">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">Phone Number</th>
+              <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+                {{ item?.customPhoneNumber || 'N/A' }}
+              </td>
+            </ng-container>
+
+            <!-- Carte -->
+            <ng-container matColumnDef="maskedPan">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">Card Number</th>
+              <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+                {{ item?.maskedPan || 'N/A' }}
+              </td>
+            </ng-container>
+
+            <!-- Banque -->
+            <ng-container matColumnDef="bankName" *ngIf="isSuperAdmin">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">Bank</th>
+              <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+                {{ item?.bankName || 'N/A' }}
+              </td>
+            </ng-container>
+
+            <!-- Branche -->
+            <ng-container matColumnDef="branchName">
+              <th mat-header-cell *matHeaderCellDef class="bg-gray-50 dark:bg-gray-800 px-4 py-2 font-semibold">Branch</th>
+              <td mat-cell *matCellDef="let item" class="px-4 py-2 truncate border-t border-gray-200 dark:border-gray-700">
+                {{ item?.branchName || 'N/A' }}
+              </td>
+            </ng-container>
+
+            <!-- Rendu des lignes -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumnssz"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnssz;"></tr>
+          </table>
+
+          <!-- Paginator -->
+          <mat-paginator class="bg-gray-50 dark:bg-gray-900 p-4"
+            [length]="totalItems"
+            [pageSize]="pageSizexx"
+            [pageSizeOptions]="[10, 20, 50, 100]"
+            (page)="onPageChange($event)"
+            showFirstLastButtons>
+          </mat-paginator>
+        </div>
+        <!-- ======= /Tableau ======= -->
+
+      </div>
+      <!-- ===================== /Carte Historique ===================== -->
+    </div>
+  </ng-template>
+</mat-tab>
+
+            </mat-tab-group>
+        </div>
+    </div>
+
+</div>

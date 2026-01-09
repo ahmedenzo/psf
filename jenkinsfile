@@ -1,0 +1,218 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "angular-nginx-app" // Docker image name
+        NODE_IMAGE = "quay.io/prometheus/node-exporter"
+        CAD_IMAGE = "gcr.io/cadvisor/cadvisor"
+        INVENTORY = "inventory.ini" // Inventory file path
+        PLAYBOOK = "deploy.yml" // Ansible playbook path
+        PROMETHEUS_PROCESS = "prometheus" // Prometheus process name
+        PROMETHEUS_DIR = "/data/jenkins/prometheus" // Prometheus directory
+        GRAFANA_CONTAINER = "grafana"
+        LOKI_CONTAINER = "loki"
+    }
+
+    stages {
+        stage('Pre-clean Specific Docker Image') {
+            steps {
+                script {
+                    echo "Removing old Docker image if exists to avoid overlay issues..."
+                    sh '''
+                        # Remove the specific image if it exists
+                        docker images ${DOCKER_IMAGE}:latest -q | xargs --no-run-if-empty docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ahmedenzo/PinSenderFrontEnd.git'
+            }
+        }
+
+        stage('Verify Required Files') {
+            steps {
+                script {
+                    echo "Verifying the required files: ${INVENTORY} and ${PLAYBOOK}..."
+                    if (!fileExists("${INVENTORY}")) {
+                        error "The file ${INVENTORY} is missing. Stopping pipeline."
+                    }
+                    if (!fileExists("${PLAYBOOK}")) {
+                        error "The file ${PLAYBOOK} is missing. Stopping pipeline."
+                    }
+                }
+            }
+        }
+
+        stage('Test Ansible Connection') {
+            steps {
+                script {
+                    def connectionStatus = sh(
+                        script: '''
+                            echo "Testing Ansible connection..."
+                            ansible all -m ping -i ${INVENTORY}
+                        ''',
+                        returnStatus: true
+                    )
+                    if (connectionStatus != 0) {
+                        error "Ansible connection test failed! Stopping pipeline."
+                    }
+                }
+            }
+        }
+
+        stage('Check and Start Monitoring Services') {
+            steps {
+                script {
+                    echo "Ensuring Prometheus, Grafana, and Loki are running..."
+
+                    // Check and start Prometheus
+                    def prometheusStatus = sh(script: "pgrep -f ${PROMETHEUS_PROCESS}", returnStatus: true)
+                    if (prometheusStatus != 0) {
+                        echo "Starting Prometheus..."
+                        sh """
+                            cd ${PROMETHEUS_DIR}
+                            nohup ./prometheus --config.file=prometheus.yml &
+                        """
+                    } else {
+                        echo "Prometheus is already running."
+                    }
+
+                    // Check and manage Grafana container
+                    def grafanaRunning = sh(script: "docker ps --filter 'name=${GRAFANA_CONTAINER}' --filter 'status=running' -q", returnStdout: true).trim()
+                    if (grafanaRunning) {
+                        echo "Grafana container is already running: ${grafanaRunning}"
+                    } else {
+                        def grafanaExists = sh(script: "docker ps -a --filter 'name=${GRAFANA_CONTAINER}' -q", returnStdout: true).trim()
+                        if (grafanaExists) {
+                            echo "Removing existing Grafana container..."
+                            sh "docker rm -f ${grafanaExists}"
+                        }
+                        echo "Starting Grafana container..."
+                        sh """
+                            docker run -d --name=${GRAFANA_CONTAINER} -p 3000:3000 grafana/grafana
+                        """
+                    }
+
+                    // Check and manage Loki container
+                    def lokiRunning = sh(script: "docker ps --filter 'name=${LOKI_CONTAINER}' --filter 'status=running' -q", returnStdout: true).trim()
+                    if (lokiRunning) {
+                        echo "Loki container is already running: ${lokiRunning}"
+                    } else {
+                        def lokiExists = sh(script: "docker ps -a --filter 'name=${LOKI_CONTAINER}' -q", returnStdout: true).trim()
+                        if (lokiExists) {
+                            echo "Removing existing Loki container..."
+                            sh "docker rm -f ${lokiExists}"
+                        }
+                        echo "Starting Loki container..."
+                        sh """
+                            docker run -d --name=${LOKI_CONTAINER} -p 3100:3100 grafana/loki:latest
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Verify Nginx Configuration') {
+            steps {
+                script {
+                    if (!fileExists('nginx.conf')) {
+                        error "The nginx.conf file is missing in the cloned repository."
+                    }
+                    sh 'ls -l nginx.conf'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh '''
+                        echo "Building Docker image with no cache..."
+                        docker build --no-cache -t ${DOCKER_IMAGE}:latest .
+                    '''
+                }
+            }
+        }
+
+        stage('Export Docker Image') {
+            steps {
+                script {
+                    sh '''
+                        echo "Exporting Docker image..."
+                        docker save -o angular-nginx-app.tar ${DOCKER_IMAGE}:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Pull Monitoring Docker Images') {
+            steps {
+                sh '''
+                    echo "Pulling Node Exporter..."
+                    docker pull ${NODE_IMAGE}
+                    echo "Pulling cAdvisor..."
+                    docker pull ${CAD_IMAGE}
+                '''
+            }
+        }
+
+        stage('Export Monitoring Docker Images') {
+            steps {
+                dir('.') {
+                    sh '''
+                        echo "Exporting Node Exporter image..."
+                        docker save -o node-exporter.tar ${NODE_IMAGE}
+                        echo "Exporting cAdvisor image..."
+                        docker save -o cadvisor.tar ${CAD_IMAGE}
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                script {
+                    sh '''
+                        echo "Deploying with Ansible..."
+                        ansible-playbook -i ${INVENTORY} ${PLAYBOOK}
+                    '''
+                }
+            }
+        }
+
+        stage('Post-clean Specific Docker Image') {
+            steps {
+                script {
+                    echo "Removing built Docker image to prevent overlay issues..."
+                    sh '''
+                        docker images ${DOCKER_IMAGE}:latest -q | xargs --no-run-if-empty docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Post-clean Monitoring Docker Images') {
+            steps {
+                script {
+                    echo "Removing monitoring Docker images to prevent overlay issues..."
+                    sh '''
+                        docker images ${NODE_IMAGE} -q | xargs --no-run-if-empty docker rmi -f
+                        docker images ${CAD_IMAGE} -q | xargs --no-run-if-empty docker rmi -f
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully! 🎉'
+        }
+        failure {
+            echo 'Pipeline failed. ❌'
+        }
+    }
+}

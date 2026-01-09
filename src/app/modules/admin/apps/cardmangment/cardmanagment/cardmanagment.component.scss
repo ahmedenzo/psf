@@ -1,0 +1,63 @@
+// Banking Theme Variables
+$primary-blue: #1e40af;
+$accent-green: #22c55e;
+$warn-red: #ef4444;
+
+// Global Overrides
+table {
+  @apply border-collapse w-full;
+}
+
+th {
+  @apply uppercase text-xs text-blue-700 font-bold;
+}
+
+td {
+  @apply text-gray-800 py-4 px-6;
+}
+
+.mat-mdc-header-row {
+  background-color: theme('colors.blue.50') !important;
+  height: 56px !important;
+}
+
+.mat-mdc-row {
+  height: 72px !important;
+  border-bottom: 1px solid theme('colors.gray.200');
+  &:hover {
+    background-color: theme('colors.blue.50') !important;
+  }
+}
+
+.mat-mdc-cell, .mat-mdc-header-cell {
+  padding: 0 16px !important;
+  line-height: 1.5 !important;
+}
+
+.mat-paginator {
+  @apply text-blue-700 bg-blue-50;
+}
+
+.mat-form-field {
+  @apply w-full;
+  .mat-mdc-form-field-outline {
+    color: $primary-blue;
+  }
+}
+
+button[mat-stroked-button] {
+  @apply bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg px-4 py-2 transition-colors;
+}
+
+::ng-deep .mat-sort-header-arrow {
+  color: $primary-blue !important;
+}
+
+@media (max-width: 640px) {
+  .grid-cols-6 {
+    grid-template-columns: 1fr;
+  }
+  td, th {
+    @apply p-3 text-xs;
+  }
+}

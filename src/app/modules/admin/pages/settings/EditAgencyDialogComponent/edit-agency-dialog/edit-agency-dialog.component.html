@@ -1,0 +1,85 @@
+<div class="bg-white rounded-2xl shadow-2xl max-w-2xl mx-auto p-6 sm:p-8 border border-gray-200">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-indigo-700 flex items-center gap-2">
+            <mat-icon class="text-indigo-500" [svgIcon]="'heroicons_outline:pencil-square'"></mat-icon>
+            Edit Agency
+        </h2>
+        <button type="button" (click)="cancel()" class="text-gray-400 hover:text-red-500 transition">
+            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="editAgencyForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Agency Name -->
+        <div class="col-span-1">
+            <label class="text-sm font-medium text-gray-700">Agency Name</label>
+            <input
+                formControlName="name"
+                type="text"
+                placeholder="e.g. ATB Bizerte"
+                class="input"
+            />
+        </div>
+
+        <!-- Agency Code -->
+        <div class="col-span-1">
+            <label class="text-sm font-medium text-gray-700">Agency Code</label>
+            <input
+                formControlName="agencyCode"
+                type="text"
+                placeholder="e.g. 0151"
+                class="input"
+            />
+        </div>
+
+        <!-- Contact Email -->
+        <div class="col-span-1">
+            <label class="text-sm font-medium text-gray-700">Contact Email</label>
+            <input
+                formControlName="contactEmail"
+                type="email"
+                placeholder="email@example.com"
+                class="input"
+            />
+        </div>
+
+        <!-- Contact Phone -->
+        <div class="col-span-1">
+            <label class="text-sm font-medium text-gray-700">Contact Phone Number</label>
+            <input
+                formControlName="contactPhoneNumber"
+                type="text"
+                placeholder="+216 99 999 999"
+                class="input"
+            />
+        </div>
+
+        <!-- Region -->
+        <div class="col-span-1">
+            <label class="text-sm font-medium text-gray-700">Region</label>
+            <select formControlName="region" class="input">
+                <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+            </select>
+        </div>
+
+        <!-- City -->
+        <div class="col-span-1">
+            <label class="text-sm font-medium text-gray-700">City</label>
+            <select formControlName="city" class="input">
+                <option *ngFor="let city of availableCities" [value]="city">{{ city }}</option>
+            </select>
+        </div>
+
+        <!-- Actions -->
+        <div class="col-span-1 md:col-span-2 flex justify-end gap-4 mt-4">
+            <button type="button" (click)="cancel()" class="btn-secondary">
+                Cancel
+            </button>
+            <button type="button" (click)="save()" class="btn-primary">
+                Save
+            </button>
+        </div>
+    </form>
+</div>

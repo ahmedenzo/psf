@@ -1,0 +1,92 @@
+<div class="flex flex-col flex-auto p-6 md:p-15">
+    <!-- Close button -->
+    <div class="flex items-center justify-end">
+        <a
+            mat-icon-button
+            [routerLink]="['../../']">
+            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+        </a>
+    </div>
+
+    <!-- Preview -->
+   
+
+    <!-- Name & Type -->
+    <div class="flex flex-col items-start mt-8">
+        <div class="text-xl font-medium">{{item.fileName}}</div>
+        <div class="mt-1 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+        [class.bg-indigo-600]="item?.type === 'folder'"
+        [class.bg-red-600]="item?.type === 'PDF'"
+        [class.bg-blue-600]="item?.type === 'DOC'"
+        [class.bg-green-600]="item?.type === 'XLS'"
+        [class.bg-gray-600]="item?.type === 'TXT'"
+        [class.bg-amber-600]="item?.type === 'JPG'">
+        {{ item?.type?.toUpperCase() || 'Unknown Type' }}
+   </div>
+   
+    </div>
+
+    <!-- Information -->
+    <div class="text-lg font-medium mt-8">Information</div>
+    <div class="flex flex-col mt-4 border-t border-b divide-y font-medium">
+        <div class="flex items-center justify-between py-3">
+            <div class="text-secondary">File Name</div>
+            <div>{{item.fileName}}</div>
+        </div>
+        <div class="flex items-center justify-between py-3">
+            <div class="text-secondary">Created At</div>
+            <div>{{item.loadDate | date: 'short'}}</div>
+        </div>
+        <div class="flex items-center justify-between py-3">
+            <div class="text-secondary">Created Count</div>
+            <div>{{item.createdCount}}</div>
+        </div>
+        <div class="flex items-center justify-between py-3">
+            <div class="text-secondary">Updated Count</div>
+            <div>{{item.updatedCount}}</div>
+        </div>
+        <div class="flex items-center justify-between py-3">
+            <div class="text-secondary">Status</div>
+            <div>
+                <ng-container *ngIf="!item.errorDetails || item.errorDetails.length === 0">
+                    <mat-icon color="primary">check_circle</mat-icon> Completed
+                </ng-container>
+                <ng-container *ngIf="item.errorDetails && item.errorDetails.length > 0">
+                    <mat-icon color="warn">warning</mat-icon> Errors ({{item.errorDetails.length}})
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="flex items-center justify-between mt-8">
+        <div class="text-lg font-medium">Error Details</div>
+    </div>
+    
+    <div class="flex mt-2 border-t">
+        <div class="py-3">
+            <ng-container *ngIf="item?.errorDetails?.length">
+                <div *ngFor="let errorDetail of item?.errorDetails; let i = index" 
+                     [ngClass]="{'bg-gray-100': i % 2 === 0, 'bg-gray-200': i % 2 !== 0}" 
+                     class="p-2 rounded-lg mb-2">
+                    <div class="font-semibold">
+                        {{ i + 1 }}. Card Number: 
+                        <span class="text-blue-600">{{ errorDetail.cardNumber.trim() }}</span>, 
+                        Error: <span class="text-red-600">{{ errorDetail.errorMessage }}</span>
+                    </div>
+                </div>
+            </ng-container>
+    
+            <ng-container *ngIf="!item?.errorDetails || item?.errorDetails.length === 0">
+                <div class="italic text-secondary">No errors reported</div>
+            </ng-container>
+        </div>
+    </div>
+    
+    
+    
+    
+
+    <!-- Actions -->
+
+</div>

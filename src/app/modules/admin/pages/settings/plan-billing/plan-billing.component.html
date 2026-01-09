@@ -1,0 +1,307 @@
+<div class="relative flex flex-col min-w-0 overflow-y-auto bg-gray-50 p-4 rounded-lg shadow-sm h-[70vh]">
+    <!-- Alerts Section -->
+    <div class="w-full space-y-3 mb-4">
+        <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessage }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="errorMessage" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ errorMessage }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="successMessageupdate" [type]="'info'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-blue-600" [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessageupdate }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="successMessagedelete" [type]="'warning'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ successMessagedelete }}
+        </fuse-alert>
+    </div>
+
+    <!-- Form -->
+    <form #accountFormRef [formGroup]="accountForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+        <div class="w-full mb-3">
+            <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <mat-icon class="icon-size-5 text-indigo-600" [svgIcon]="'heroicons_solid:credit-card'"></mat-icon>
+                Create Bins
+            </div>
+            <div class="text-gray-500 text-sm mt-1">Create Bins Card For Each Bank</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            <!-- BIN Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">BIN</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:credit-card'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'bin'" 
+                        matInput 
+                        type="text" 
+                        maxlength="8" 
+                        pattern="^[459](\d{5}|\d{7})$" 
+                        placeholder="6 or 8-digit BIN" 
+                        class="text-sm">
+                    <mat-error *ngIf="accountForm.get('bin')?.hasError('required') && accountForm.get('bin')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('bin')?.hasError('pattern') && accountForm.get('bin')?.touched" class="text-sm">
+                        Must start with 4, 5, or 9 and be 6 or 8 digits
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- System Code Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">System Code</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:cog'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'systemCode'" 
+                        matInput arrastr
+                        type="text" 
+                        maxlength="1" 
+                        pattern="^[123]$" 
+                        placeholder="1, 2, or 3" 
+                        class="text-sm">
+                    <mat-error *ngIf="accountForm.get('systemCode')?.hasError('required') && accountForm.get('systemCode')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('systemCode')?.hasError('pattern') && accountForm.get('systemCode')?.touched" class="text-sm">
+                        Must be 1, 2, or 3
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.hasError('systemCodeInvalid') && accountForm.get('systemCode')?.touched" class="text-sm">
+                        Does not match BIN logic
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Card Type Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Card Type</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'feather:credit-card'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'cardType'" 
+                        matInput 
+                        type="text" 
+                        maxlength="3" 
+                        pattern="^\d{3}$" 
+                        placeholder="3-digit code" 
+                        class="text-sm">
+                    <mat-error *ngIf="accountForm.get('cardType')?.hasError('required') && accountForm.get('cardType')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('cardType')?.hasError('pattern') && accountForm.get('cardType')?.touched" class="text-sm">
+                        Must be 3 digits
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Service Code Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Service Code</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:shield-check'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'serviceCode'" 
+                        matInput 
+                        type="text" 
+                        maxlength="3" 
+                        pattern="^\d{3}$" 
+                        placeholder="3-digit code" 
+                        class="text-sm">
+                    <mat-error *ngIf="accountForm.get('serviceCode')?.hasError('required') && accountForm.get('serviceCode')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('serviceCode')?.hasError('pattern') && accountForm.get('serviceCode')?.touched" class="text-sm">
+                        Must be 3 digits
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Key Data A Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Key Data A</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:shield-check'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'keyDataA'" 
+                        matInput 
+                        type="text" 
+                        maxlength="16" 
+                        minlength="16" 
+                        pattern="^[0-9A-Fa-f]{16}$" 
+                        placeholder="16-char hexadecimal" 
+                        class="text-sm">
+                    <mat-error *ngIf="accountForm.get('keyDataA')?.hasError('required') && accountForm.get('keyDataA')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('keyDataA')?.hasError('pattern') && accountForm.get('keyDataA')?.touched" class="text-sm">
+                        Must be 16-char hexadecimal
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Key Data B Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Key Data B</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:shield-check'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'keyDataB'" 
+                        matInput 
+                        type="text" 
+                        maxlength="16" 
+                        minlength="16" 
+                        pattern="^[0-9A-Fa-f]{16}$" 
+                        placeholder="16-char hexadecimal" 
+                        class="text-sm">
+                    <mat-error *ngIf="accountForm.get('keyDataB')?.hasError('pattern') && accountForm.get('keyDataB')?.touched" class="text-sm">
+                        Must be 16-char hexadecimal
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Bank Field -->
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Bank</mat-label>
+                    <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_outline:building-library'" matPrefix></mat-icon>
+                    <ng-container *ngIf="isEditing; else selectBank">
+                        <input 
+                            matInput 
+                            [value]="getBankName(selectedBin)" 
+                            disabled 
+                            class="text-sm">
+                    </ng-container>
+                    <ng-template #selectBank>
+                        <mat-select [formControlName]="'bankId'" class="text-sm">
+                            <mat-option *ngFor="let bank of banks" [value]="bank.id">
+                                {{ bank.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="accountForm.get('bankId')?.hasError('required') && accountForm.get('bankId')?.touched" class="text-sm">
+                            Required
+                        </mat-error>
+                    </ng-template>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end mt-4 space-x-3">
+            <button
+                mat-stroked-button
+                type="button"
+                class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+                (click)="onCancel()">
+                Cancel
+            </button>
+            <button
+                mat-flat-button
+                type="button"
+                class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+                [disabled]="accountForm.invalid"
+                (click)="isEditMode ? updateBin() : createBin()">
+                {{ isEditMode ? 'Update Bin' : 'Create Bin' }}
+            </button>
+        </div>
+    </form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Search and Filter Section -->
+    <div class="flex flex-col sm:flex-row items-center gap-4 mb-4">
+        <mat-form-field class="w-full sm:w-64 fuse-mat-dense fuse-mat-rounded" [subscriptSizing]="'dynamic'">
+            <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:magnifying-glass'" matPrefix></mat-icon>
+            <input
+                matInput
+                (keyup)="applyFilter($event)"
+                [autocomplete]="'off'"
+                placeholder="Search"
+                class="text-sm">
+        </mat-form-field>
+
+        <mat-form-field class="w-full sm:w-64 fuse-mat-dense fuse-mat-rounded" [subscriptSizing]="'dynamic'">
+            <mat-icon class="icon-size-5 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_outline:building-library'" matPrefix></mat-icon>
+            <mat-select placeholder="Select Bank Name" (selectionChange)="filterByBankCode($event.value)" class="text-sm">
+                <mat-option [value]="'all'">All</mat-option>
+                <mat-option *ngFor="let bank of uniqueBankCodes" [value]="bank">
+                    {{ bank }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
+        <table mat-table [dataSource]="dataSource" matSort class="w-full">
+            <!-- Columns -->
+            <ng-container matColumnDef="bin">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-700">BIN</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="text-sm text-gray-600"> {{element.bin}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="systemCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-700">System Code</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="text-sm text-gray-600"> {{element.systemCode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cardType">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-700">Card Type</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="text-sm text-gray-600"> {{element.cardType}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="serviceCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-700">Service Code</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="text-sm text-gray-600"> {{element.serviceCode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="bankCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-700">Bank Code</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="text-sm text-gray-600"> {{element.bankCode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="bankName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="text-sm font-semibold text-gray-700">Bank Name</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="text-sm text-gray-600"> {{element.bankName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef class="text-sm font-semibold text-gray-700">Actions</mat-header-cell>
+                <mat-cell *matCellDef="let item" class="flex items-center gap-2">
+                    <button mat-icon-button color="primary" class="hover:bg-indigo-100 rounded-full transition duration-200 transform hover:scale-110" (click)="onEdit(item)">
+                        <mat-icon class="text-indigo-600 icon-size-4" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" class="hover:bg-red-100 rounded-full transition duration-200 transform hover:scale-110" (click)="onDelete(item.id, item.bin)">
+                        <mat-icon class="text-red-600 icon-size-4" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <!-- Header and Row -->
+            <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-100"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 transition-all duration-200"></mat-row>
+        </table>
+
+        <!-- Paginator -->
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons class="bg-gray-50"></mat-paginator>
+    </div>
+</div>
+

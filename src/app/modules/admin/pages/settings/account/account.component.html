@@ -1,0 +1,397 @@
+<div class="relative flex flex-col min-w-0 overflow-y-auto bg-gray-50 p-4 rounded-lg shadow-sm h-[70vh]">
+    <!-- Alerts Section -->
+    <div class="w-full space-y-3 mb-4">
+        <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessage }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="errorMessage" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ errorMessage }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="successMessageu" [type]="'info'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-blue-600" [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+                Success
+            </span>
+            {{ successMessageu }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="errorMessageu" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+            <span fuseAlertTitle class="flex items-center gap-1">
+                <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                Warning
+            </span>
+            {{ errorMessageu }}
+        </fuse-alert>
+    </div>
+
+    <!-- Bank Form -->
+    <form #accountFormRef [formGroup]="accountForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+        <div class="w-full mb-3">
+            <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <mat-icon class="icon-size-4 text-indigo-500" [svgIcon]="'heroicons_outline:building-library'" matPrefix></mat-icon>
+                Create Bank
+            </div>
+            <div class="text-gray-500 text-sm mt-1">Enter bank details.</div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Bank Name</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:building-office'" matPrefix></mat-icon>
+                    <input [formControlName]="'name'" matInput placeholder="Bank name" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('name')?.hasError('required') && accountForm.get('name')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('name')?.hasError('pattern') && accountForm.get('name')?.touched" class="text-sm">
+                        Letters only
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Bank Code</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:hashtag'" matPrefix></mat-icon>
+                    <input 
+                        [formControlName]="'bankCode'" 
+                        matInput 
+                        type="text" 
+                        maxlength="5" 
+                        minlength="5" 
+                        pattern="^\d{5}$" 
+                        placeholder="5-digit code" 
+                        class="text-sm" />
+                    <mat-error *ngIf="accountForm.get('bankCode')?.hasError('required') && accountForm.get('bankCode')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('bankCode')?.hasError('pattern') && accountForm.get('bankCode')?.touched" class="text-sm">
+                        5 digits
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Bank Label</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:tag'" matPrefix></mat-icon>
+                    <input [formControlName]="'libelleBanque'" matInput maxlength="50" placeholder="Bank label" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('libelleBanque')?.hasError('required') && accountForm.get('libelleBanque')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('libelleBanque')?.hasError('maxlength') && accountForm.get('libelleBanque')?.touched" class="text-sm">
+                        Max 50 chars
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('libelleBanque')?.hasError('pattern') && accountForm.get('libelleBanque')?.touched" class="text-sm">
+                        Letters only
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Bank Ensign</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:briefcase'" matPrefix></mat-icon>
+                    <input [formControlName]="'enseigneBanque'" matInput maxlength="10" placeholder="Bank ensign" class="text-sm">
+                    <mat-error *ngIf="accountForm.get('enseigneBanque')?.hasError('required') && accountForm.get('enseigneBanque')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('enseigneBanque')?.hasError('maxlength') && accountForm.get('enseigneBanque')?.touched" class="text-sm">
+                        Max 10 chars
+                    </mat-error>
+                    <mat-error *ngIf="accountForm.get('enseigneBanque')?.hasError('pattern') && accountForm.get('enseigneBanque')?.touched" class="text-sm">
+                        Letters only
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="flex items-center">
+                <mat-slide-toggle [formControlName]="'banqueEtrangere'" labelPosition="after" class="text-indigo-600 text-sm">
+                    <span class="text-gray-700 font-medium text-sm">International</span>
+                </mat-slide-toggle>
+            </div>
+
+<div class="flex flex-col items-start space-y-2">
+  <label for="logo-upload" class="text-sm font-semibold text-gray-700">Bank Logo</label>
+
+  <input
+    id="logo-upload"
+    type="file"
+    (change)="onFileSelected($event)"
+    accept="image/*"
+    class="hidden"
+  />
+
+  <label
+    for="logo-upload"
+    class="relative group cursor-pointer w-24 h-24 rounded-full border-2 border-dashed border-gray-300 hover:border-indigo-500 transition duration-300 shadow-sm hover:shadow-md overflow-hidden flex items-center justify-center bg-white"
+  >
+    <ng-container *ngIf="logoPreview; else uploadIcon">
+      <img
+        [src]="logoPreview"
+        alt="Logo Preview"
+        class="w-full h-full object-cover rounded-full transition-transform duration-300 group-hover:scale-105"
+      />
+    </ng-container>
+
+    <ng-template #uploadIcon>
+      <div class="flex flex-col items-center justify-center text-indigo-400 group-hover:text-indigo-600 transition-colors duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 12v8m0-8l-3 3m3-3l3 3m0-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v4" />
+        </svg>
+        <span class="text-xs font-medium">Upload</span>
+      </div>
+    </ng-template>
+  </label>
+</div>
+
+        </div>
+        <div class="flex items-center justify-end mt-4 space-x-3">
+            <button
+                mat-stroked-button
+                type="button"
+                class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+                (click)="onCancel()">
+                Cancel
+            </button>
+            <button
+                mat-flat-button
+                type="button"
+                class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+                [disabled]="accountForm.invalid || (!logoFile && !isEditMode)"
+                (click)="isEditMode ? onUpdate() : onSave()">
+                {{ isEditMode ? 'Update Bank' : 'Create Bank' }}
+            </button>
+        </div>
+    </form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Admin Form -->
+    <form [formGroup]="adminForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+        <div class="w-full max-w-2xl mb-3">
+            <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <mat-icon class="icon-size-5 text-indigo-600" [svgIcon]="'heroicons_solid:user-group'"></mat-icon>
+                Admin Management
+            </div>
+            <div class="text-gray-500 text-sm mt-1">Create a new admin.</div>
+        </div>
+        <div class="w-full max-w-2xl">
+            <fuse-alert *ngIf="successMessageadmin" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+                <span fuseAlertTitle class="flex items-center gap-1">
+                    <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                    Success
+                </span>
+                {{ successMessageadmin }}
+            </fuse-alert>
+            <fuse-alert *ngIf="errorMessageadmin" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+                <span fuseAlertTitle class="flex items-center gap-1">
+                    <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+                    Warning
+                </span>
+                {{ errorMessageadmin }}
+            </fuse-alert>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Username</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                    <input [formControlName]="'username'" matInput placeholder="Username" class="text-sm">
+                    <mat-error *ngIf="adminForm.get('username')?.hasError('required') && adminForm.get('username')?.touched" class="text-sm">
+                        Required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Password</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input 
+                        [type]="showPassword ? 'text' : 'password'" 
+                        [formControlName]="'password'" 
+                        matInput 
+                        placeholder="Password" 
+                        class="text-sm">
+                    <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" matTooltip="Toggle visibility">
+                        <mat-icon class="text-indigo-500 icon-size-4">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                    <button mat-icon-button matSuffix (click)="generatePassword()" matTooltip="Generate password">
+                        <mat-icon class="text-indigo-500 icon-size-4">refresh</mat-icon>
+                    </button>
+                    <mat-error *ngIf="adminForm.get('password')?.errors?.passwordComplexity && adminForm.get('password')?.touched" class="text-sm">
+                        8+ chars, mixed
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Email</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:envelope'" matPrefix></mat-icon>
+                    <input [formControlName]="'email'" matInput type="email" placeholder="Email" class="text-sm">
+                    <mat-error *ngIf="adminForm.get('email')?.hasError('email') && adminForm.get('email')?.touched" class="text-sm">
+                        Invalid email
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label class="text-gray-700 text-sm">Phone Number</mat-label>
+                    <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
+                    <input [formControlName]="'phoneNumber'" matInput placeholder="Phone" class="text-sm">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="flex items-center justify-end mt-4 space-x-3">
+            <button
+                mat-stroked-button
+                type="button"
+                class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+                (click)="onCanceladmin()">
+                Cancel
+            </button>
+            <button
+                mat-flat-button
+                type="button"
+                class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+                [disabled]="adminForm.invalid"
+                (click)="registerAdmin()">
+                Save Admin
+            </button>
+        </div>
+    </form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Associate Admin Form -->
+<form [formGroup]="AssoAdminForm" class="bg-white p-4 rounded-md shadow hover:shadow-md transition-shadow duration-200">
+  <div class="w-full max-w-2xl mb-3">
+    <div class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+      <mat-icon class="icon-size-5 text-indigo-600" [svgIcon]="'heroicons_solid:link'"></mat-icon>
+      Associate Admin
+    </div>
+    <div class="text-gray-500 text-sm mt-1">Link admin to bank.</div>
+  </div>
+  <div class="w-full max-w-2xl">
+    <fuse-alert *ngIf="successMessagea" [type]="'success'" [appearance]="'outline'" class="animate-slide-in text-sm">
+      <span fuseAlertTitle class="flex items-center gap-1">
+        <mat-icon class="icon-size-4 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+        Success
+      </span>
+      {{ successMessagea }}
+    </fuse-alert>
+    <fuse-alert *ngIf="errorMessagea" [type]="'warn'" [appearance]="'outline'" class="animate-slide-in text-sm">
+      <span fuseAlertTitle class="flex items-center gap-1">
+        <mat-icon class="icon-size-4 text-yellow-600" [svgIcon]="'heroicons_solid:exclamation-triangle'"></mat-icon>
+        Warning
+      </span>
+      {{ errorMessagea }}
+    </fuse-alert>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+    <div>
+      <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label class="text-gray-700 text-sm">Select Admin</mat-label>
+        <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+        <mat-select [formControlName]="'AdminId'" class="text-sm">
+          <ngx-mat-select-search
+            [formControl]="adminFilterCtrl"
+            placeholderLabel="Search for an admin..."
+            noEntriesFoundLabel="No results found"
+          ></ngx-mat-select-search>
+          <mat-option *ngFor="let admin of filteredAdmins" [value]="admin.id">
+            {{ admin.username }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="AssoAdminForm.get('AdminId')?.hasError('required') && AssoAdminForm.get('AdminId')?.touched" class="text-sm">
+          Required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+        <mat-label class="text-gray-700 text-sm">Select Bank</mat-label>
+        <mat-icon class="icon-size-4 text-indigo-500 animate-pulse" [svgIcon]="'heroicons_outline:building-library'" matPrefix></mat-icon>
+        <mat-select [formControlName]="'bankId'" class="text-sm">
+          <ngx-mat-select-search
+            [formControl]="bankFilterCtrl"
+            placeholderLabel="Search for a bank..."
+            noEntriesFoundLabel="No results found"
+          ></ngx-mat-select-search>
+          <mat-option *ngFor="let bank of filteredBanks" [value]="bank.id">
+            {{ bank.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="AssoAdminForm.get('bankId')?.hasError('required') && AssoAdminForm.get('bankId')?.touched" class="text-sm">
+          Required
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="flex items-center justify-end mt-4 space-x-3">
+    <button
+      mat-stroked-button
+      type="button"
+      class="px-4 py-2 border-indigo-500 text-indigo-600 hover:bg-indigo-50 transition duration-200 text-sm"
+      (click)="onCancelass()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      type="button"
+      class="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 transition duration-200 text-sm"
+      [disabled]="AssoAdminForm.invalid"
+      (click)="associateAdmin()"
+    >
+      Associate
+    </button>
+  </div>
+</form>
+
+    <div class="my-4 border-t border-gray-200"></div>
+
+    <!-- Banks List (Card Grid) -->
+    <div class="w-full">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <mat-icon class="icon-size-5 text-indigo-600" [svgIcon]="'heroicons_solid:view-list'"></mat-icon>
+            Banks
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+            <div *ngFor="let item of banks" class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-3 border-2 border-gradient-to-r from-indigo-500 to-purple-600">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 mb-3">
+                        <img *ngIf="item.logoPreview" [src]="'data:image/png;base64,' + item.logoPreview" 
+                             alt="{{ item.name }} logo" class="w-full h-full object-cover rounded-full" />
+                        <div *ngIf="!item.logoPreview" class="w-full h-full flex items-center justify-center bg-gray-200 rounded-full">
+                            <mat-icon class="text-gray-500 icon-size-4" [svgIcon]="'heroicons_solid:building-office'"></mat-icon>
+                        </div>
+                    </div>
+                    <h4 class="text-base font-medium text-gray-900">{{ item.name }}</h4>
+                    <p class="text-sm text-gray-600">Code: {{ item.bankCode }}</p>
+                    <p class="text-sm text-gray-500">Admin: {{ item.adminUsername ? item.adminUsername : '-' }}</p>
+                    <button mat-icon-button color="primary" class="mt-3 hover:bg-indigo-100 rounded-full transition duration-200 transform hover:scale-110"
+                            (click)="onEdit(item)">
+                        <mat-icon class="text-indigo-600 icon-size-4" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+</style>

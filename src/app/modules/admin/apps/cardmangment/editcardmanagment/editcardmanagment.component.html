@@ -1,0 +1,155 @@
+<style>
+/* ---- Dynamic Error Highlight ---- */
+.error-field .mat-mdc-text-field-wrapper {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 1px #dc2626 inset !important;
+}
+
+/* ---- Shake animation when invalid ---- */
+.shake {
+    animation: shakeAnim 0.35s ease-in-out;
+}
+
+@keyframes shakeAnim {
+    0%   { transform: translateX(0px); }
+    20%  { transform: translateX(-4px); }
+    40%  { transform: translateX(4px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+    100% { transform: translateX(0px); }
+}
+
+/* ---- Green valid border ---- */
+.valid-field .mat-mdc-text-field-wrapper {
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 1px #16a34a inset !important;
+}
+</style>
+
+
+<div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+  <div
+    class="relative bg-gradient-to-br from-indigo-50 via-white to-indigo-100 rounded-3xl shadow-2xl p-8 w-full max-w-md border border-indigo-100">
+
+    <!-- Header -->
+    <div class="mb-6 text-center">
+      <h2 class="text-2xl font-semibold text-gray-800">Edit Card</h2>
+      <p class="text-gray-500 text-sm">Update your contact information securely</p>
+    </div>
+
+    <!-- Card Preview -->
+    <div
+      class="mx-auto mb-6 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white w-80 h-44 rounded-2xl shadow-lg p-5 flex flex-col justify-between relative">
+
+      <div class="flex justify-between items-center">
+        <span class="font-bold tracking-wide text-sm uppercase bg-black/40 px-3 py-1 rounded-lg">
+          {{ data.item.bankName }}
+        </span>
+
+        <img *ngIf="cardType === 'visa'" src="assets/images/logo/visa-svgrepo-com.svg" class="h-10" />
+        <img *ngIf="cardType === 'mastercard'" src="assets/images/logo/mastercard-svgrepo-com.svg" class="h-10" />
+      </div>
+
+      <p class="text-lg font-mono tracking-widest">
+        {{ data.item.cardNumber?.slice(0, 4) }} **** **** {{ data.item.cardNumber?.slice(-4) }}
+      </p>
+
+      <div class="flex justify-between text-xs tracking-wide">
+        <div>
+          <p class="opacity-70">Card Holder</p>
+          <p class="font-semibold">{{ data.item.cardHolderName }}</p>
+        </div>
+        <div class="text-right">
+          <p class="opacity-70">Valid Thru</p>
+          <p class="font-semibold">{{ formatFinalDate(data.item.finalDate) }}</p>
+        </div>
+      </div>
+
+      <div class="absolute inset-0 bg-white/10 rounded-2xl"></div>
+    </div>
+
+    <!-- Form -->
+    <form #editForm="ngForm" class="grid gap-4">
+
+      <!-- PHONE NUMBER -->
+      <mat-form-field appearance="outline" class="w-full"
+       [ngClass]="{ 
+          'error-field shake': !isPhoneValid, 
+          'valid-field': isPhoneValid && phoneLength >= 11 
+        }">
+        <mat-label>Phone Number</mat-label>
+        <mat-icon matPrefix class="text-indigo-500">call</mat-icon>
+
+        <input
+          matInput
+          [(ngModel)]="data.item.phoneNumber"
+          name="phoneNumber"
+          required
+          minlength="11"
+          maxlength="13"
+          pattern="^[0-9]*$"
+          (ngModelChange)="validatePhone()"
+        />
+
+        <mat-hint *ngIf="phoneLength < 11">
+          {{ 11 - phoneLength }} digit(s) remaining
+        </mat-hint>
+
+        <mat-hint *ngIf="isPhoneValid && phoneLength >= 11 && phoneLength <= 13" class="text-green-600">
+          Looks good ({{ phoneLength }} digits)
+        </mat-hint>
+
+        <mat-error *ngIf="!isPhoneValid">
+          Phone number must contain 11 to 13 digits.
+        </mat-error>
+
+      </mat-form-field>
+
+      <!-- CIN / Passport -->
+      <mat-form-field appearance="outline" class="w-full"
+       [ngClass]="{ 
+          'error-field shake': !isCINValid, 
+          'valid-field': isCINValid && cinLength >= 6 
+        }">
+        <mat-label>CIN / Passport</mat-label>
+        <mat-icon matPrefix class="text-indigo-500">badge</mat-icon>
+
+        <input
+          matInput
+          [(ngModel)]="data.item.identification"
+          name="identification"
+          required
+          minlength="6"
+          pattern="^[A-Za-z0-9]{6,12}$"
+          (ngModelChange)="validateCIN()"
+        />
+
+        <mat-hint *ngIf="isCINValid && cinLength >= 6" class="text-green-600">
+          Valid ({{ cinLength }} characters)
+        </mat-hint>
+
+        <mat-error *ngIf="!isCINValid">
+          Must contain at least 6 alphanumeric characters.
+        </mat-error>
+      </mat-form-field>
+
+    </form>
+
+    <!-- Actions -->
+    <div class="mt-6 flex justify-end gap-3">
+      <button mat-stroked-button (click)="cancel()" class="px-4 py-2">
+        Cancel
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="!isCINValid || !isPhoneValid"
+        (click)="save()"
+        class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        Save
+      </button>
+    </div>
+
+  </div>
+</div>

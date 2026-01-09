@@ -1,0 +1,31 @@
+.mat-table-custom {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table-header {
+    background-color: #f5f5f5;
+    color: #424242;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .mat-form-field {
+    margin-bottom: 20px;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+      .animate-slide-in {
+        animation: slideIn 0.4s ease-in-out;
+    }
+    @keyframes slideIn {
+        0% { transform: translateY(-10px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }

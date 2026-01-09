@@ -1,0 +1,268 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+  <mat-drawer-container class="flex-auto h-full" (backdropClick)="closeDrawer()">
+    
+    <!-- Drawer (contenu du fichier) -->
+    <mat-drawer
+      #drawer
+      class="w-full sm:w-[900px] bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-2xl rounded-l-3xl border border-gray-100 dark:border-gray-800"
+      [mode]="drawerMode"
+      [opened]="drawerOpened"
+      position="end">
+
+      <div class="flex flex-col h-full p-6 lg:p-8">
+        
+        <!-- HEADER -->
+        <div class="flex items-start justify-between gap-4 mb-6 pb-5 border-b border-gray-200/60 dark:border-gray-700/60">
+          <div class="flex-1">
+            <h2 class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
+              File Details
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 font-medium">
+              {{ selectedFile?.name }}
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+
+            <!-- Total codes delivered -->
+            <div *ngIf="parsedRows.length" class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-emerald-100 to-green-200 text-black text-xs font-semibold rounded-full shadow-sm">
+              <mat-icon class="w-3.5 h-3.5 text-emerald-700" svgIcon="heroicons_outline:check-circle"></mat-icon>
+              <span>TOTAL: {{ parsedRows.length > 2 ? parsedRows.length - 2 : 0 }} Codes delivered</span>
+
+
+            </div>
+
+            <!-- Close button -->
+            <button 
+              mat-icon-button 
+              (click)="closeDrawer()"
+              class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200">
+              <mat-icon svgIcon="heroicons_outline:x-mark" class="w-5 h-5"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- META -->
+        <div *ngIf="selectedFileMeta" class="mb-6 space-y-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div><strong>DATE:</strong> {{ selectedFileMeta?.date }}</div>
+          <div><strong>BANK:</strong> {{ selectedFileMeta?.bank }}</div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="mb-6">
+          <mat-form-field appearance="outline" class="w-full search-field">
+            <mat-label>Search in file...</mat-label>
+            <input 
+              matInput 
+              placeholder="Type to search..." 
+              [(ngModel)]="drawerSearchText" 
+              (input)="applyDrawerFilter()">
+
+            <button 
+              mat-icon-button 
+              matSuffix 
+              *ngIf="drawerSearchText" 
+              (click)="clearDrawerSearch()"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+              <mat-icon svgIcon="heroicons_outline:x-mark" class="w-4 h-4"></mat-icon>
+            </button>
+
+            <mat-icon 
+              matSuffix 
+              *ngIf="!drawerSearchText" 
+              svgIcon="heroicons_outline:magnifying-glass" 
+              class="text-gray-400">
+            </mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- TABLE (corrigée) -->
+        <div 
+          *ngIf="filteredParsedRows.length > 0; else noData" 
+          class="flex-1 overflow-y-auto rounded-2xl border border-gray-200/80 dark:border-gray-700/80 bg-gray-50/40 dark:bg-gray-800/40 backdrop-blur-sm custom-scrollbar">
+
+          <table mat-table [dataSource]="filteredParsedRows" class="w-full text-sm">
+
+            <!-- TYPE -->
+            <ng-container matColumnDef="PinOperationType">
+              <th mat-header-cell *matHeaderCellDef class="bg-gradient-to-r from-sky-600 to-blue-500 text-white font-bold px-5 py-3 uppercase text-xs">
+                Type
+              </th>
+              <td mat-cell *matCellDef="let row" class="px-5 py-3 text-sky-700 dark:text-sky-300 whitespace-nowrap">
+                {{ row.PinOperationType }}
+              </td>
+            </ng-container>
+
+            <!-- PAN -->
+            <ng-container matColumnDef="PAN">
+              <th mat-header-cell *matHeaderCellDef class="px-5 py-3 font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 uppercase text-xs">
+                PAN
+              </th>
+              <td mat-cell *matCellDef="let row" class="px-5 py-3 font-mono text-indigo-600 dark:text-indigo-400 whitespace-nowrap">
+                {{ row.PAN }}
+              </td>
+            </ng-container>
+
+            <!-- PHONE -->
+            <ng-container matColumnDef="PHONE">
+              <th mat-header-cell *matHeaderCellDef class="px-5 py-3 font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 uppercase text-xs">
+                Phone
+              </th>
+              <td mat-cell *matCellDef="let row" class="px-5 py-3 text-gray-800 dark:text-gray-100 whitespace-nowrap">
+                {{ row.PHONE }}
+              </td>
+            </ng-container>
+
+            <!-- BRANCH -->
+            <ng-container matColumnDef="BRANCH">
+              <th mat-header-cell *matHeaderCellDef class="px-5 py-3 font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 uppercase text-xs">
+                Branch
+              </th>
+              <td mat-cell *matCellDef="let row" class="px-5 py-3 text-gray-800 dark:text-gray-100 whitespace-nowrap">
+                {{ row.BRANCH }}
+              </td>
+            </ng-container>
+
+            <!-- SENT_AT -->
+            <ng-container matColumnDef="SENT_AT">
+              <th mat-header-cell *matHeaderCellDef class="px-5 py-3 font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 uppercase text-xs">
+                Sent At
+              </th>
+              <td mat-cell *matCellDef="let row" class="px-5 py-3 text-gray-600 dark:text-gray-300 text-xs whitespace-nowrap">
+                {{ row.SENT_AT }}
+              </td>
+            </ng-container>
+
+            <!-- Header et lignes -->
+        
+            <tr mat-row *matRowDef="let row; columns: ['PinOperationType','PAN','PHONE','BRANCH','SENT_AT'];"></tr>
+          </table>
+        </div>
+
+        <!-- No Data -->
+        <ng-template #noData>
+          <div class="flex flex-col items-center justify-center h-full text-center py-12 px-6">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shadow-inner">
+              <mat-icon class="text-4xl text-gray-400 dark:text-gray-600" svgIcon="heroicons_outline:magnifying-glass"></mat-icon>
+            </div>
+            <p class="text-lg font-medium text-gray-700 dark:text-gray-300">No results found</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Try adjusting your search or check the uploaded file.
+            </p>
+          </div>
+        </ng-template>
+      </div>
+    </mat-drawer>
+
+    <!-- === TABLE PRINCIPALE === -->
+    <mat-drawer-content class="flex flex-col">
+
+      <!-- HEADER PRINCIPAL -->
+      <div class="flex flex-col sm:flex-row items-center justify-between p-6 sm:p-8 bg-white dark:bg-gray-900 shadow-lg rounded-b-2xl border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center space-x-4">
+          <div class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Billing Files
+          </div>
+          <div class="flex items-center px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full text-sm font-medium text-indigo-700 dark:text-indigo-200 shadow-sm">
+            <mat-icon class="w-4 h-4 mr-1" svgIcon="heroicons_outline:document-text"></mat-icon>
+            {{ dataSource.data.length }} files
+          </div>
+        </div>
+
+        <!-- Filtre date -->
+        <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+          <mat-form-field appearance="outline" class="w-full sm:w-48 !m-0">
+            <mat-label class="text-xs font-medium text-sky-700 dark:text-sky-300">Select Date</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" (dateChange)="applyFilter()" class="text-sm" placeholder="MMM dd, yyyy" />
+            <mat-datepicker-toggle matSuffix [for]="picker" class="text-sky-600">
+              <mat-icon matDatepickerToggleIcon svgIcon="heroicons_outline:calendar-days" class="w-5 h-5"></mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <button
+            mat-stroked-button
+            class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium bg-sky-700 text-white border border-sky-500 hover:bg-sky-800 dark:bg-sky-800 dark:border-sky-600"
+            (click)="resetFilter()">
+            <mat-icon svgIcon="heroicons_outline:arrow-path" class="w-4 h-4 text-white"></mat-icon>
+            <span class="hidden sm:inline">Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barre de progression -->
+      <div *ngIf="isDownloading" class="w-full px-6 mt-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Downloading file...</span>
+          <span class="text-xs font-medium text-indigo-600 dark:text-indigo-400">{{ downloadProgress }}%</span>
+        </div>
+        <div class="overflow-hidden h-2 rounded-full bg-gray-200 dark:bg-gray-700">
+          <div [style.width.%]="downloadProgress" class="h-full rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300"></div>
+        </div>
+      </div>
+
+      <!-- Alertes -->
+      <div class="px-6 mt-6 space-y-3">
+        <fuse-alert *ngIf="successMessage" [type]="'success'" [appearance]="'soft'" class="rounded-xl shadow-md animate-slide-in">
+          <span fuseAlertTitle class="font-semibold flex items-center gap-1">Success</span>
+          {{ successMessage }}
+        </fuse-alert>
+
+        <fuse-alert *ngIf="errorMessage" [type]="'error'" [appearance]="'soft'" class="rounded-xl shadow-md animate-slide-in">
+          <span fuseAlertTitle class="font-semibold flex items-center gap-1">
+            <mat-icon class="text-lg">error</mat-icon> Error
+          </span>
+          {{ errorMessage }}
+        </fuse-alert>
+      </div>
+
+      <!-- TABLE PRINCIPALE -->
+      <div class="flex justify-center mt-8 mb-12 px-4 sm:px-6">
+        <div class="w-full max-w-7xl">
+          <mat-table [dataSource]="dataSource" matSort class="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef mat-sort-header class="font-semibold text-gray-700 dark:text-gray-300">File Name</mat-header-cell>
+              <mat-cell *matCellDef="let file" class="text-gray-900 dark:text-gray-100">
+                <div class="flex items-center gap-3">
+                  <mat-icon svgIcon="heroicons_outline:document-text" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></mat-icon>
+                  <span class="font-medium truncate max-w-xs">{{ file.name.replace('.txt', '') }}</span>
+                </div>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <mat-header-cell *matHeaderCellDef mat-sort-header class="font-semibold text-gray-700 dark:text-gray-300">Date</mat-header-cell>
+              <mat-cell *matCellDef="let file" class="text-gray-600 dark:text-gray-400">{{ file.date | date:'MMM dd, yyyy' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef class="text-center font-semibold text-gray-700 dark:text-gray-300">Action</mat-header-cell>
+              <mat-cell *matCellDef="let file" class="text-center py-3 flex items-center justify-center gap-2">
+                <button mat-stroked-button class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-sky-700 text-white border border-sky-500 hover:bg-sky-800 dark:bg-sky-800" (click)="downloadFile(file)">
+                  <mat-icon svgIcon="heroicons_outline:cloud-arrow-down" class="w-4 h-4 text-white"></mat-icon>
+                  Download
+                </button>
+
+                <button mat-stroked-button class="flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-700 text-white border border-emerald-500 hover:bg-emerald-800 dark:bg-emerald-800" (click)="openDetails(file)">
+                  <mat-icon svgIcon="heroicons_outline:eye" class="w-4 h-4 text-white"></mat-icon>
+                  View
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"></mat-row>
+          </mat-table>
+
+          <mat-paginator 
+            #paginator
+            [pageSizeOptions]="[10, 20, 50, 100]"
+            [pageSize]="10"
+            showFirstLastButtons
+            (page)="onPageChange($event)">
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

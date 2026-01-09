@@ -1,0 +1,124 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main Section -->
+    <div class="flex flex-col items-center p-6 sm:p-10">
+        <div class="flex flex-col w-full max-w-4xl">
+
+            <!-- Title Section -->
+            <div class="-ml-4 sm:mt-8">
+                <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight leading-tight">Admin Interface Overview</h1>
+                <p class="mt-2 text-lg sm:text-2xl tracking-tight text-secondary">
+                    The admin interface allows for managing agencies and agents, changing security settings, and viewing agency-related information.
+                </p>
+            </div>
+
+            <!-- Create Agency Section -->
+            <h2 class="mt-8 text-3xl font-semibold leading-tight">Create Agency</h2>
+            <p class="mt-4 text-secondary text-lg">
+                In this section, admins can create a new agency by providing required information such as agency name, code, contact email, phone number, address, region, and city. Once completed, the user can cancel or submit the form using the "Create Agency" button.
+            </p>
+            <div class="mt-8">
+                <img src="assets\images\logo\g1.png" alt="Create Agency" class="w-full rounded-lg shadow-lg">
+            </div>
+
+            <!-- Create Agent Section -->
+            <h2 class="mt-8 text-3xl font-semibold leading-tight">Create Agent</h2>
+            <p class="mt-4 text-secondary text-lg">
+                This section allows the creation of a new agent under an agency. The form includes fields for the agent's username, password, email, and phone number. Once completed, the user can either cancel or click "Save" to add the agent.
+            </p>
+            <div class="mt-8">
+                <img src="assets\images\logo\g2.png" alt="Create Agent" class="w-full rounded-lg shadow-lg">
+            </div>
+
+            <!-- Associate Agent to Agency Section -->
+            <h2 class="mt-8 text-3xl font-semibold leading-tight">Associate Agent to Agency</h2>
+            <p class="mt-4 text-secondary text-lg">
+                This section provides the ability to associate an existing agent with an agency by selecting both from dropdowns. After selecting, the user can save or cancel the association.
+            </p>
+            <div class="mt-8">
+                <img src="assets\images\logo\g3.png" alt="Associate Agent to Agency" class="w-full rounded-lg shadow-lg">
+            </div>
+
+            <!-- Admin Security Section -->
+            <h2 class="mt-8 text-3xl font-semibold leading-tight">Admin Security (Change Password)</h2>
+            <p class="mt-4 text-secondary text-lg">
+                Admins can change their password in this section by entering the current and new passwords. A password generator option is also available if needed. The admin can either save the new password or cancel the process.
+            </p>
+            <div class="mt-8">
+                <img src="assets\images\logo\g4.png" alt="Change Password" class="w-full rounded-lg shadow-lg">
+            </div>
+
+            <!-- Generate Random Password for Admins -->
+            <h2 class="mt-8 text-3xl font-semibold leading-tight">Generate Random Password for Admins</h2>
+            <p class="mt-4 text-secondary text-lg">
+                This section allows the admin to generate a random password for other admins who may have forgotten their current password. The admin can select from the dropdown and click "Generate" to produce a new password.
+            </p>
+            <div class="mt-8">
+                <img src="assets\images\logo\g5.png" alt="Generate Random Password for Admins" class="w-full rounded-lg shadow-lg">
+            </div>
+
+            <!-- Admin Team Section -->
+            <h2 class="mt-8 text-3xl font-semibold leading-tight">Admin Team (Agency Information)</h2>
+            <p class="mt-4 text-secondary text-lg">
+                This section displays a table with agency-related information such as agency name, code, email, city, region, associated agent, status, and an option to edit agency details. There are filters for region and city, as well as pagination options for better navigation.
+            </p>
+            <div class="mt-8">
+                <img src="assets\images\logo\g6.png" alt="Admin Team" class="w-full rounded-lg shadow-lg">
+            </div>
+
+            <!-- Next Section -->
+
+        </div>
+    </div>
+</div>
+
+<!-- Additional CSS for styling -->
+<style>
+    .text-primary {
+        color: #007bff; /* Primary color */
+    }
+
+    .text-secondary {
+        color: #6b7280; /* Secondary color */
+    }
+
+    .bg-card {
+        background-color: #ffffff; /* Card background */
+    }
+
+    .hover\:shadow-lg:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Hover shadow */
+    }
+
+    .rounded-lg {
+        border-radius: 1rem;
+    }
+
+    .shadow-lg {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .italic {
+        font-style: italic;
+    }
+
+    .font-extrabold {
+        font-weight: 800;
+    }
+
+    .font-semibold {
+        font-weight: 600;
+    }
+
+    .leading-tight {
+        line-height: 1.25;
+    }
+
+    .tracking-tight {
+        letter-spacing: -0.05em;
+    }
+
+    .max-w-4xl {
+        max-width: 64rem;
+    }
+</style>

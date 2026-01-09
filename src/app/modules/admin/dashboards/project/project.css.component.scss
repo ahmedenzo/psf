@@ -1,0 +1,256 @@
+table {
+    width: 100%;
+  }
+  
+  tr.example-detail-row {
+    height: 0;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+  .example-element-diagram {
+    min-width: 100px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 130px;
+  }
+  
+  .example-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+  }
+  
+  .example-element-description {
+    padding: 16px;
+  }
+  
+  .example-element-description-attribution {
+    opacity: 0.5;
+  }
+  .log-table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .full-width-table {
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .expanded-row {
+    background-color: #f9f9f9;
+  }
+  
+  .expanded-row .request-response-container {
+    padding: 15px;
+  }
+  
+  .expanded-row h4 {
+    margin-top: 0;
+  }
+  
+  pre {
+    background-color: #e8e8e8;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap; /* Ensures long content wraps */
+    word-break: break-word;
+  }
+  .example-element-row {
+    cursor: pointer;
+}
+
+.example-detail-row {
+    height: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.example-element-description {
+    font-size: 14px;
+}
+.mat-header-cell, .mat-cell {
+    text-align: left; /* Align the text to the left */
+}
+
+.mat-elevation-z8 {
+    width: 100%; /* Ensure the elevation wrapper takes full width */
+}
+
+.mat-paginator {
+    width: 100%; /* Ensure paginator takes full width */
+}
+
+.bg-card {
+  background-color: #ffffff; /* Keep the background white */
+  border-radius: 1.5rem; /* Rounded corners for modern look */
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+.rounded-2xl {
+  border-radius: 1.25rem;
+}
+
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05); /* Scale effect on hover */
+}
+
+.animate-pulse {
+  animation: pulse 1.5s infinite; /* Pulsing effect for dynamic look */
+}
+
+@keyframes pulse {
+  0% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0.5;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+.text-red-600 {
+  color: #ef4444; /* Highlight errors in red */
+}
+
+.text-green-600 {
+  color: #10b981; /* Highlight response time in green */
+}
+
+.text-blue-600 {
+  color: #3b82f6; /* Highlight active sessions in blue */
+}
+
+.text-sm {
+  font-size: 0.875rem; /* Smaller text for headers (14px) */
+}
+
+.text-lg {
+  font-size: 1.125rem; /* Slightly smaller text for values (18px) */
+}
+
+.font-medium {
+  font-weight: 500; /* Medium weight for headers */
+}
+
+.font-semibold {
+  font-weight: 600; /* Semi-bold for values */
+}
+.summary-container {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: space-between;
+}
+
+.summary-card {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.2s ease;
+  color: #2f3e4e; /* Neutral text color */
+  background-color: #ffffff;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05); /* Light shadow */
+}
+
+.summary-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Pin and OTP color distinction */
+.pin-card .summary-value {
+  color: #1E88E5; /* Blue color for Pin */
+}
+
+.otp-card .summary-value {
+  color: #F4511E; /* Orange color for OTP */
+}
+
+/* Special styles for Total and Today cards */
+.total-card {
+  border-left: 4px solid #1E88E5;
+  background-color: #F3F9FF;
+}
+
+.total-card.otp-card {
+  border-left-color: #F4511E;
+  background-color: #FFF3F0;
+}
+
+.today-card {
+  border-left: 4px solid #b0bec5; /* Subtle gray for today */
+  background-color: #f4f6f8;
+}
+
+/* Typography */
+.summary-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: #607D8B; /* Light grey text */
+}
+
+.summary-value {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+.animate-value {
+  display: inline-block;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Keyframes for smooth appearance */
+  @keyframes barAnimation {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.2); }
+  }
+  @keyframes lineAnimation {
+    0% { stroke-dasharray: 0 100; }
+    100% { stroke-dasharray: 100 0; }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  .animate-bar1 { animation: barAnimation 1.5s ease-in-out infinite; }
+  .animate-bar2 { animation: barAnimation 1.5s ease-in-out infinite 0.2s; }
+  .animate-bar3 { animation: barAnimation 1.5s ease-in-out infinite 0.4s; }
+  .animate-line { animation: lineAnimation 2s ease-in-out infinite; }
+  .animate-pulse { animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  
