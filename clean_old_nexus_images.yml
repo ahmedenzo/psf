@@ -1,0 +1,68 @@
+---
+- name: Cleanup old Nexus RAW Docker TAR images (keep last 7)
+  hosts: control
+  gather_facts: false
+ 
+  vars:
+    nexus_url: "http://172.17.5.190:8081"
+    nexus_user: "admin"
+    nexus_pass: "Admin@123"
+    repository: "docker-tar-repo"
+    image_name: "angular-nginx-app"
+    keep_last: 7
+ 
+  tasks:
+ 
+    - name: Get list of components from Nexus RAW repo
+      uri:
+        url: "{{ nexus_url }}/service/rest/v1/components?repository={{ repository }}"
+        method: GET
+        user: "{{ nexus_user }}"
+        password: "{{ nexus_pass }}"
+        force_basic_auth: yes
+        return_content: yes
+      register: components_response
+      delegate_to: localhost
+      run_once: true
+ 
+    - name: Filter components for target image
+      set_fact:
+        image_components: >-
+          {{
+            components_response.json['items']
+            | selectattr('name', 'search', image_name)
+            | list
+          }}
+ 
+    - name: Sort components by version (build number)
+      set_fact:
+        sorted_components: >-
+          {{
+            image_components
+            | sort(attribute='name', reverse=true)
+          }}
+ 
+    - name: Determine components to delete (older than last 7)
+      set_fact:
+        components_to_delete: "{{ sorted_components[keep_last:] }}"
+ 
+    - name: Show components that will be deleted
+      debug:
+        msg: "Deleting version {{ item.version }} (ID={{ item.id }})"
+      loop: "{{ components_to_delete }}"
+ 
+    - name: Delete old components from Nexus
+      uri:
+        url: "{{ nexus_url }}/service/rest/v1/components/{{ item.id }}"
+        method: DELETE
+        user: "{{ nexus_user }}"
+        password: "{{ nexus_pass }}"
+        force_basic_auth: yes
+        status_code: 204
+      loop: "{{ components_to_delete }}"
+      when: components_to_delete | length > 0
+      delegate_to: localhost
+      run_once: true
+    - name: Cleanup completed
+      debug:
+        msg: "Nexus cleanup done. Kept last {{ keep_last }} versions."

@@ -1,18 +1,23 @@
 pipeline {
     agent any
-
+ 
     environment {
         DOCKER_IMAGE = "angular-nginx-app" // Docker image name
         NODE_IMAGE = "quay.io/prometheus/node-exporter"
         CAD_IMAGE = "gcr.io/cadvisor/cadvisor"
         INVENTORY = "inventory.ini" // Inventory file path
         PLAYBOOK = "deploy.yml" // Ansible playbook path
+        NEXUS_CLEAR_PLAYBOOK= "clean_old_nexus_images.yml" // Nexus cleanup playbook path
         PROMETHEUS_PROCESS = "prometheus" // Prometheus process name
         PROMETHEUS_DIR = "/data/jenkins/prometheus" // Prometheus directory
         GRAFANA_CONTAINER = "grafana"
         LOKI_CONTAINER = "loki"
+        NEXUS_USER = "admin"
+        NEXUS_PASS = "Admin@123"
+        NEXUS_HOST = "172.17.5.190"
+        NEXUS_PORT = "8081"
     }
-
+ 
     stages {
         stage('Pre-clean Specific Docker Image') {
             steps {
@@ -25,13 +30,13 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/ahmedenzo/PinSenderFrontEnd.git'
+                git branch: 'main', url: 'https://github.com/ahmedenzo/pinsenderFinaleVersion.git'
             }
         }
-
+ 
         stage('Verify Required Files') {
             steps {
                 script {
@@ -45,7 +50,7 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Test Ansible Connection') {
             steps {
                 script {
@@ -62,12 +67,12 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Check and Start Monitoring Services') {
             steps {
                 script {
                     echo "Ensuring Prometheus, Grafana, and Loki are running..."
-
+ 
                     // Check and start Prometheus
                     def prometheusStatus = sh(script: "pgrep -f ${PROMETHEUS_PROCESS}", returnStatus: true)
                     if (prometheusStatus != 0) {
@@ -79,7 +84,7 @@ pipeline {
                     } else {
                         echo "Prometheus is already running."
                     }
-
+ 
                     // Check and manage Grafana container
                     def grafanaRunning = sh(script: "docker ps --filter 'name=${GRAFANA_CONTAINER}' --filter 'status=running' -q", returnStdout: true).trim()
                     if (grafanaRunning) {
@@ -95,7 +100,7 @@ pipeline {
                             docker run -d --name=${GRAFANA_CONTAINER} -p 3000:3000 grafana/grafana
                         """
                     }
-
+ 
                     // Check and manage Loki container
                     def lokiRunning = sh(script: "docker ps --filter 'name=${LOKI_CONTAINER}' --filter 'status=running' -q", returnStdout: true).trim()
                     if (lokiRunning) {
@@ -114,7 +119,7 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Verify Nginx Configuration') {
             steps {
                 script {
@@ -125,29 +130,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh '''
-                        echo "Building Docker image with no cache..."
-                        docker build --no-cache -t ${DOCKER_IMAGE}:latest .
-                    '''
-                }
-            }
-        }
-
-        stage('Export Docker Image') {
-            steps {
-                script {
-                    sh '''
-                        echo "Exporting Docker image..."
-                        docker save -o angular-nginx-app.tar ${DOCKER_IMAGE}:latest
-                    '''
-                }
-            }
-        }
-
+ 
         stage('Pull Monitoring Docker Images') {
             steps {
                 sh '''
@@ -158,7 +141,7 @@ pipeline {
                 '''
             }
         }
-
+ 
         stage('Export Monitoring Docker Images') {
             steps {
                 dir('.') {
@@ -171,7 +154,47 @@ pipeline {
                 }
             }
         }
-
+ 
+        stage('Build Docker Image') {
+            steps {
+                dir('.') {
+                    sh """
+                        echo "Building Docker image..."
+                        docker build --no-cache -t ${DOCKER_IMAGE}:${BUILD_NUMBER} -t ${DOCKER_IMAGE}:latest .
+                    """
+                }
+            }
+        }
+ 
+       
+        stage('Save Docker Image') {
+            steps {
+                dir('.') {
+                    sh """
+                        echo "Saving Docker image as TAR..."
+                        docker save -o ${DOCKER_IMAGE}-latest.tar ${DOCKER_IMAGE}:latest
+                        docker save -o ${DOCKER_IMAGE}-${BUILD_NUMBER}.tar ${DOCKER_IMAGE}:${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+ 
+        stage('Upload TAR to Nexus') {
+            steps {
+                    dir('.') {
+                        sh """
+                            echo "Uploading TAR to Nexus raw repository..."
+                            curl -v -u ${NEXUS_USER}:${NEXUS_PASS} --upload-file ${DOCKER_IMAGE}-latest.tar \
+                                http://${NEXUS_HOST}:${NEXUS_PORT}/repository/docker-tar-repo/${DOCKER_IMAGE}/latest/${DOCKER_IMAGE}-latest.tar
+ 
+                            curl -v -u ${NEXUS_USER}:${NEXUS_PASS} --upload-file ${DOCKER_IMAGE}-${BUILD_NUMBER}.tar \
+                                http://${NEXUS_HOST}:${NEXUS_PORT}/repository/docker-tar-repo/${DOCKER_IMAGE}/${BUILD_NUMBER}/${DOCKER_IMAGE}-${BUILD_NUMBER}.tar
+ 
+                        """
+                    }
+                }
+        }
+ 
         stage('Deploy with Ansible') {
             steps {
                 script {
@@ -182,18 +205,30 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Post-clean Specific Docker Image') {
             steps {
                 script {
                     echo "Removing built Docker image to prevent overlay issues..."
                     sh '''
                         docker images ${DOCKER_IMAGE}:latest -q | xargs --no-run-if-empty docker rmi -f
+                        docker images ${DOCKER_IMAGE}:${BUILD_NUMBER} -q | xargs --no-run-if-empty docker rmi -f
                     '''
                 }
             }
         }
-
+ 
+        stage('Cleanup Old Nexus Images') {
+            steps {
+                script {
+                        sh """
+                            echo "Clearing old images..."
+                            ansible-playbook -i ${INVENTORY} ${NEXUS_CLEAR_PLAYBOOK}
+                        """
+                    }
+            }
+        }
+ 
         stage('Post-clean Monitoring Docker Images') {
             steps {
                 script {
@@ -206,7 +241,7 @@ pipeline {
             }
         }
     }
-
+ 
     post {
         success {
             echo 'Pipeline completed successfully! 🎉'
